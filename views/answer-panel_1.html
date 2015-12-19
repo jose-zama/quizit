@@ -1,0 +1,44 @@
+<!doctype html>
+<html ng-app="answerApp">
+
+    <head>
+        <meta charset="utf-8">
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+        <script type="text/javascript" src="/js/angular.min.js"></script>
+        <script type="text/javascript" src="/js/answer.js"></script>
+        <script type="text/javascript" src="/js/socket.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/qa.css">
+
+        <!-- Mobile -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Q&amp;A</title>
+    </head>
+
+    <body>
+        <div class="container" ng-controller="answersPanelController as panel"  >
+            <!--<audio id="player" src="/audio/wrong.wav"></audio>-->
+            <div class="page-header">
+                <h1>Q&amp;A <small>A nice way to involve your audience</small> </h1>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>{{panel.question}}</h3>
+                </div>
+                <form name="answerForm" ng-submit="panel.submitAnswer()">
+                    <div class="panel-body">
+                        <fieldset>
+                            <button type="button" ng-class="{active:panel.isActive($index)}" ng-click="panel.selectAnswer($index)" ng-repeat="option in panel.options" class="btn {{option.style}} btn-lg btn-block " >{{option.text}}</button>                            
+                        </fieldset>
+                        <fieldset>
+                            <button ng-hide="true" class="btn btn-default pull-right" type="submit">Submit</button>
+                        </fieldset>
+                    </div>
+                </form>	
+            </div>
+        </div>
+    </body>
+</html>

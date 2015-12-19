@@ -1,0 +1,42 @@
+<!doctype html>
+<html ng-app="questionApp">
+    <head>
+        <meta charset="utf-8">
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+        <script type="text/javascript" src="/js/angular.min.js"></script>
+        <script type="text/javascript" src="/js/question.js"></script>
+        <script type="text/javascript" src="/js/socket.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/qa.css">
+
+        <!-- Mobile -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Q&amp;A</title>
+    </head>
+    <body>
+        <div class="container" ng-controller="questionController as question" >
+            <div class="page-header">
+                <h1>Q&amp;A <small>A nice way to involve your audience</small> </h1>
+            </div>
+            <div>
+                <form name="questionForm" ng-submit="question.showCorrectAnswer()">			
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3>{{question.title}}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                <li class="list-group-item {{answer.style}}" ng-repeat="answer in question.options" >{{answer.text}}</li>                                
+                            </ul>				
+                            <button ng-hide="question.isAnswerShown" class="btn btn-primary pull-right" type="submit">Show answer</button>
+                            <button ng-show="question.isAnswerShown" ng-click="question.next()" class="btn btn-primary pull-right" type="button">Next</button>
+                        </div>	
+                    </div>		
+                </form>	
+            </div>
+        </div>
+    </body>
+</html>

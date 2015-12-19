@@ -1,0 +1,35 @@
+<!doctype html>
+<html ng-app="answerApp">
+
+    <head>
+        <meta charset="utf-8">
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+        <script type="text/javascript" src="/js/angular.min.js"></script>
+        <script type="text/javascript" src="/js/answer.js"></script>
+        <script type="text/javascript" src="/js/socket.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/angular-route.min.js"></script>
+
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/qa.css">
+
+        <!-- Mobile -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Q&amp;A</title>
+        
+        <base href="/student/">
+    </head>
+
+    <body>
+        <div class="container"  >
+            <!--<audio id="player" src="/audio/wrong.wav"></audio>-->
+            <div class="page-header">
+                <h1>Q&amp;A <small>A nice way to involve your audience</small> </h1>
+            </div>
+            <div class="panel panel-default">
+                <div ng-view></div>
+            </div>
+        </div>
+    </body>
+</html>
