@@ -63,7 +63,7 @@
         //init
         $timeout(function () {
             if (!_username) {
-                
+                $location.path('/user');
             } else {
                 socket.emit('question:pullCurrent', '', function (currentQuestion) {
                     console.log(currentQuestion.title);
