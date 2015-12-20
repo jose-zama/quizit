@@ -8,7 +8,7 @@
                         templateUrl: '/partials/answer.html'
                     }).
                     when('/user', {
-                        controller: 'answersPanelController as logon',
+                        controller: 'logonCtrl as logon',
                         templateUrl: '/partials/logon.html'
                     }).
                     otherwise({
@@ -17,37 +17,11 @@
             $locationProvider
                     .html5Mode(true);
         }]);
-    /*
-     app.controller('logonCtrl', function ($scope, $location, socket) {
-     ctrl = this;
-     
-     ctrl.setUser = function (username) {
-     socket.emit('user:login', username, function (isTaken) {
-     if (isTaken) {
-     //stay and show a message
-     } else {
-     $location.path('/');
-     }
-     });
-     alert('destroying in user...');
-     socket.removeAllListeners();
-     };
-     
-     $scope.$on('$destroy', function (event) {
-     alert('destroying...');
-     socket.removeAllListeners();
-     // or something like
-     // socket.removeListener(this);
-     });
-     });
-     */
-    var currentQuestion;
 
-    app.controller('answersPanelController', function ($scope, $location, $timeout, socket) {
+    app.controller('logonCtrl', function ($scope, $location, socket) {
+        ctrl = this;
 
-        panel = this;
-
-        panel.setUser = function (username) {
+        ctrl.setUser = function (username) {
             socket.emit('user:login', username, function (isTaken) {
                 console.log(isTaken);
                 if (isTaken) {
@@ -57,6 +31,19 @@
                 }
             });
         };
+
+        $scope.$on('$destroy', function (event) {
+            socket.removeAllListeners();
+            // or something like
+            // socket.removeListener(this);
+        });
+    });
+
+    var currentQuestion;
+
+    app.controller('answersPanelController', function ($scope, $location, $timeout, socket) {
+
+        panel = this;
 
         panel.changeQuestion = function (question) {
             currentQuestion = question;
@@ -71,18 +58,27 @@
 
         //init
         $timeout(function () {
-            if (currentQuestion) {
-                panel.changeQuestion(currentQuestion);
-            }
+            //if (currentQuestion) {
+            //    panel.changeQuestion(currentQuestion);//pull current question
+            // }else{
+            socket.emit('question:pullCurrent', '', function (currentQuestion) {
+                console.log(currentQuestion.title);
+                if (currentQuestion) {
+                    panel.changeQuestion(currentQuestion);//pull current question
+                }
+            });
+            //}
         }, 0);
 
 
         //listeners
         ////init with current question
         socket.on('questions:init', function (question) {
+            console.log(question.title);
             panel.changeQuestion(question);
             //socket.emit('user:send', 'Anita');
         });
+
         //event fires when presenter changes the question
         socket.on('questions:change', function (question) {
             panel.changeQuestion(question);

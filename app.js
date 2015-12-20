@@ -111,12 +111,16 @@ io.on('connection', function (socket) {
     socket.score = 0;
 
     console.log('a user connected...login');
-    socket.emit('questions:init', currentQuestion);
+    //socket.emit('questions:init', currentQuestion);
+
+    socket.on('question:pullCurrent', function (blank, sendCurrentQuestion) {
+        sendCurrentQuestion(currentQuestion);
+    });
 
     socket.on('user:login', function (username, isTaken) {
         if (!socket.username) {
             socket.username = username;
-            if(!students.isRegistered(username)){
+            if (!students.isRegistered(username)) {
                 console.log('no registered');
                 students.push(socket.username);
             }
@@ -156,7 +160,7 @@ io.on('connection', function (socket) {
         //socket.answer = -1;//clear answer
     });
     socket.on('disconnect', function () {
-        console.log('user disconnected ' +socket.username);
+        console.log('user disconnected ' + socket.username);
     });
 });
 
