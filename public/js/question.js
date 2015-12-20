@@ -1,7 +1,7 @@
 (function () {
     var app = angular.module('questionApp', ['socketApp']);
 
-    app.controller('questionController', ['$window','socket' , function ($window, socket) {
+    app.controller('questionController', ['$window', 'socket', function ($window, socket) {
             questionView = this;
             questionView.title = '';
             questionView.options = [];
@@ -23,22 +23,25 @@
 
             //listeners
             //set current question
-            socket.on('questions:init', function (question) {
-                if(question){
+            socket.emit('question:pullCurrent', '', function (question) {
+                if (question) {
                     questionView.showQuestion(question);
                     //socket.emit('user:send','presenter');
-                }else{
+                } else {
                     $window.location.href = './results';
                 }
             });
-            //questionView.showQuestion(questionView.question);
 
-            //TODO: ad data to project
-            /*$http.get('/data/data.json').success(function (data) {
-             questionView.products = data;
-             });*/
-
-            /*for (var i = 0; i < question1.options.length; i++) {
+            /*socket.on('questions:init', function (question) {
+             if (question) {
+             questionView.showQuestion(question);
+             //socket.emit('user:send','presenter');
+             } else {
+             $window.location.href = './results';
+             }
+             });
+             //questionView.showQuestion(questionView.question);
+             /*for (var i = 0; i < question1.options.length; i++) {
              questionView.options.push({text: question1.options[i], style: ''});
              }*/
 
@@ -52,10 +55,10 @@
                 socket.emit('questions:next', null, function (question) {
                     if (question) {
                         questionView.showQuestion(question);
-                    }else{
+                    } else {
                         $window.location.href = './results';
                     }
-                    
+
                 });
             };
 

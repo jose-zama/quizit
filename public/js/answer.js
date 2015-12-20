@@ -27,19 +27,23 @@
                 if (isTaken) {
                     //stay and show a message
                 } else {
+                    _username = username;
                     $location.path('/answer');
                 }
             });
         };
 
         $scope.$on('$destroy', function (event) {
-            socket.removeAllListeners();
+            socket.removeAllListeners(); //Avoid creating another listener 
+            //of the other controller
+            // 
             // or something like
             // socket.removeListener(this);
         });
     });
 
     var currentQuestion;
+    var _username;
 
     app.controller('answersPanelController', function ($scope, $location, $timeout, socket) {
 
@@ -58,16 +62,16 @@
 
         //init
         $timeout(function () {
-            //if (currentQuestion) {
-            //    panel.changeQuestion(currentQuestion);//pull current question
-            // }else{
-            socket.emit('question:pullCurrent', '', function (currentQuestion) {
-                console.log(currentQuestion.title);
-                if (currentQuestion) {
-                    panel.changeQuestion(currentQuestion);//pull current question
-                }
-            });
-            //}
+            if (!_username) {
+                
+            } else {
+                socket.emit('question:pullCurrent', '', function (currentQuestion) {
+                    console.log(currentQuestion.title);
+                    if (currentQuestion) {
+                        panel.changeQuestion(currentQuestion);//pull current question
+                    }
+                });
+            }
         }, 0);
 
 
