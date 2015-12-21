@@ -3,8 +3,8 @@
 
     var currentQuestion;
     var _username;
-    var _score = 0;
-    var _questionsTotal = 0;
+    var _score;
+    var _questionsTotal;
 
     app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider.
@@ -135,6 +135,10 @@
 
         result.score = _score;
         result.questionsTotal = _questionsTotal;
+        
+        if(!_score){
+            $location.path('/user');
+        }
 
         $scope.$on('$destroy', function (event) {
             socket.removeAllListeners(); //Avoid creating another listener 
