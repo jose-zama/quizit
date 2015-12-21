@@ -146,7 +146,7 @@ io.on('connection', function (socket) {
         //send the new question to all students
         io.emit('questions:change', currentQuestion);
     });
-    socket.on('score', function (correctAnswer) {
+    socket.on('presenter:showAnswer', function (correctAnswer) {
         //console.log('correctAnswer: ' + (correctAnswer - 1));
         //console.log('answer: ' + answer);
         /*if (answer === correctAnswer - 1) {//-1 is because answerAnswer is not 0-based index
@@ -155,9 +155,13 @@ io.on('connection', function (socket) {
          console.log(socket.username+' score: ' + socket.score);
          students[socket.username].score = socket.score;*/
         //score = socket.score;
-        console.log('check');
         io.emit('showAnswer', correctAnswer);
         //socket.answer = -1;//clear answer
+    });
+    socket.on('student:getScore', function (username, returnScore) {
+        var score = students.getScore(username);
+        var questionsTotal = questions.length;
+        returnScore(score, questionsTotal);
     });
     socket.on('disconnect', function () {
         console.log('user disconnected ' + socket.username);

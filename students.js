@@ -1,5 +1,4 @@
 var students = (function () {
-    var num = 1;
     var students = [];
     var id = {};
 
@@ -15,19 +14,16 @@ var students = (function () {
         id[username] = students.length - 1;
     };
 
-    var getUsername = function () {
-        return 'User' + num++;
+    var getScore = function (username) {
+        return students[id[username]].score;
     };
 
     var addPoints = function (username, points) {
-        console.log('username to add points ' + username);
-        console.log(id);
-        console.log(students);
         students[id[username]].score += points;
     };
     
     return {
-        getUsername: getUsername,
+        getScore: getScore,
         push: push,
         isRegistered: isRegistered,
         array: students,

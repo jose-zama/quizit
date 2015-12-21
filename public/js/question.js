@@ -39,16 +39,12 @@
              } else {
              $window.location.href = './results';
              }
-             });
-             //questionView.showQuestion(questionView.question);
-             /*for (var i = 0; i < question1.options.length; i++) {
-             questionView.options.push({text: question1.options[i], style: ''});
-             }*/
+             });*/
 
             questionView.showCorrectAnswer = function () {
                 questionView.options[questionView.question.answer - 1].style = 'list-group-item-success';
                 questionView.isAnswerShown = true;
-                socket.emit('score', questionView.question.answer);
+                socket.emit('presenter:showAnswer', questionView.question.answer);
             };
 
             questionView.next = function () {

@@ -1,15 +1,24 @@
 (function () {
     var app = angular.module('answerApp', ['socketApp', 'ngRoute']);
 
+    var currentQuestion;
+    var _username;
+    var _score = 0;
+    var _questionsTotal = 0;
+
     app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider.
                     when('/answer', {
                         controller: 'answersPanelController as panel',
-                        templateUrl: '/partials/answer.html'
+                        templateUrl: '/partials/student/answer.html'
                     }).
                     when('/user', {
                         controller: 'logonCtrl as logon',
-                        templateUrl: '/partials/logon.html'
+                        templateUrl: '/partials/student/logon.html'
+                    }).
+                    when('/result', {
+                        controller: 'resultCtrl as result',
+                        templateUrl: '/partials/student/result.html'
                     }).
                     otherwise({
                         redirectTo: '/user'
@@ -42,9 +51,6 @@
         });
     });
 
-    var currentQuestion;
-    var _username;
-
     app.controller('answersPanelController', function ($scope, $location, $timeout, socket) {
 
         panel = this;
@@ -74,18 +80,20 @@
             }
         }, 0);
 
-
-        //listeners
-        ////init with current question
-        socket.on('questions:init', function (question) {
-            console.log(question.title);
-            panel.changeQuestion(question);
-            //socket.emit('user:send', 'Anita');
-        });
-
         //event fires when presenter changes the question
         socket.on('questions:change', function (question) {
-            panel.changeQuestion(question);
+            if (question) {
+                panel.changeQuestion(question);
+            } else {
+                //TODO: check status of questions (about to start or finished) and
+                //route accordingly
+                socket.emit('student:getScore', _username, function (score,questionsTotal) {
+                    console.log('score' + score);
+                    _score = score;
+                    _questionsTotal = questionsTotal;
+                    $location.path('/result');
+                });
+            }
         });
 
         socket.on('showAnswer', function (answerAnswer) {
@@ -121,5 +129,21 @@
             // socket.removeListener(this);
         });
     });
+
+    app.controller('resultCtrl', function ($scope, $location, socket) {
+        result = this;
+
+        result.score = _score;
+        result.questionsTotal = _questionsTotal;
+
+        $scope.$on('$destroy', function (event) {
+            socket.removeAllListeners(); //Avoid creating another listener 
+            //of the other controller
+            // 
+            // or something like
+            // socket.removeListener(this);
+        });
+    });
+
 
 })();
