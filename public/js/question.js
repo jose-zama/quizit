@@ -57,6 +57,9 @@
 
                 });
             };
+            
+            questionView.exit = function () {
+            };
 
         }]);
 

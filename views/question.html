@@ -32,6 +32,7 @@
                                 <li class="list-group-item {{answer.style}}" ng-repeat="answer in question.options" >{{answer.text}}</li>                                
                             </ul>				
                             <button ng-hide="question.isAnswerShown" class="btn btn-primary pull-right" type="submit">Show answer</button>
+                            <button ng-click="question.exit()" class="btn btn-link" type="button">Exit</button>
                             <button ng-show="question.isAnswerShown" ng-click="question.next()" class="btn btn-primary pull-right" type="button">Next</button>
                         </div>	
                     </div>		

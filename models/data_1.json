@@ -1,12 +1,12 @@
 [
     {
-        "title": "¿Quién fue llamado el libertador de las Américas?",
-        "answer": 3,
+        "title": "What is the capital of United Kingdom?",
+        "answer": 2,
         "options": [
-            "Chavez",
-            "Benito Juarez",
-            "Bolivar",
-            "Da Silva"
+            "Mexicola",
+            "London",
+            "Edinburgh",
+            "Toluca"
         ]
     },
     {
@@ -20,16 +20,6 @@
         ]
     },
     {
-        "title": "What is the capital of United Kingdom?",
-        "answer": 2,
-        "options": [
-            "Mexico",
-            "London",
-            "Edinburgh",
-            "Toluca"
-        ]
-    },
-    {
         "title": "¿De que carece una persona célibe?",
         "answer": 1,
         "options": [
@@ -40,13 +30,13 @@
         ]
     },
     {
-        "title": "Is this the last question?",
-        "answer": 1,
+        "title": "¿Quién fue llamado el libertador de las Américas?",
+        "answer": 3,
         "options": [
-            "No",
-            "Yes",
-            "Dunno",
-            "Only you knows"
+            "Chavez",
+            "Benito Juarez",
+            "Bolivar",
+            "Da Silva"
         ]
     },
     {
