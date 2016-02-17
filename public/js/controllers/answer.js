@@ -45,9 +45,6 @@
         $scope.$on('$destroy', function (event) {
             socket.removeAllListeners(); //Avoid creating another listener 
             //of the other controller
-            // 
-            // or something like
-            // socket.removeListener(this);
         });
     });
 
@@ -125,8 +122,6 @@
 
         $scope.$on('$destroy', function (event) {
             socket.removeAllListeners();
-            // or something like
-            // socket.removeListener(this);
         });
     });
 
@@ -143,9 +138,6 @@
         $scope.$on('$destroy', function (event) {
             socket.removeAllListeners(); //Avoid creating another listener 
             //of the other controller
-            // 
-            // or something like
-            // socket.removeListener(this);
         });
     });
 

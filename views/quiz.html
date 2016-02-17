@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
         <title>Quiz</title>
 
         <!-- Bootstrap -->
@@ -12,18 +12,25 @@
         <link rel="stylesheet" href="/css/qa.css">
 
         <!-- Jquery, jqueryUI(minimised to have only sortable dependencies) -->
-        <script type="text/javascript" src="/js/jquery.js"></script>
-        <script type="text/javascript" src="/js/jqueryUI.min.js"></script>
-        <script type="text/javascript" src="/js/jquery.ui.touch-punch.min.js"></script>
-
+        <script type="text/javascript" src="/js/lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/js/lib/jquery/jqueryUI.min.js"></script>
+        
+        <!-- Touch support -->
+        <script type="text/javascript" src="/js/lib/jquery.ui.touch-punch.min.js"></script>
 
         <!--Angular dependencies -->
-        <script type="text/javascript" src="/js/angular.min.js"></script>
-        <script type="text/javascript" src="/js/angular-resource.min.js"></script>
-        <script type="text/javascript" src="/js/quiz.js"></script>
-        <script src="/js/services.js"></script>
-        <script type="text/javascript" src="/js/sortable.js"></script>
-
+        <script type="text/javascript" src="/js/lib/angular/angular.min.js"></script>
+        <script type="text/javascript" src="/js/lib/angular/angular-resource.min.js"></script>
+        
+        <!-- Sortable support for questions order -->
+        <script type="text/javascript" src="/js/lib/sortable.js"></script>
+        
+        <!--Angular controller -->
+        <script type="text/javascript" src="/js/controllers/quiz.js"></script>
+        
+        <!--Angular services -->
+        <script src="/js/services/services.js"></script>
+        
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
