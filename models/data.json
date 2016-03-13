@@ -1,15 +1,5 @@
 [
     {
-        "title": "¿Quién fue llamado el libertador de las Américas?",
-        "answer": 3,
-        "options": [
-            "Chavez",
-            "Benito Juarez",
-            "Bolivar",
-            "Da Silva"
-        ]
-    },
-    {
         "title": "Who killed Krillin for first time?",
         "answer": 4,
         "options": [
@@ -27,6 +17,16 @@
             "London",
             "Edinburgh",
             "Toluca"
+        ]
+    },
+    {
+        "title": "¿Quién fue llamado el libertador de las Américas?",
+        "answer": 3,
+        "options": [
+            "Chavez",
+            "Benito Juarez",
+            "Bolivar",
+            "Da Silva"
         ]
     },
     {

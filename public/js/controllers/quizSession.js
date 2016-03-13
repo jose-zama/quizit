@@ -1,5 +1,5 @@
 (function () {
-    var app = angular.module('questionApp', ['socketApp']);
+    var app = angular.module('quizSessionApp', ['socketApp']);
 
     app.controller('questionController', ['$window', 'socket', function ($window, socket) {
             questionView = this;

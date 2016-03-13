@@ -1,5 +1,5 @@
 (function () {
-    var app = angular.module('answerApp', ['socketApp', 'ngRoute']);
+    var app = angular.module('quizClientApp', ['socketApp', 'ngRoute']);
 
     var currentQuestion;
     var _username;

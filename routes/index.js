@@ -10,4 +10,8 @@ router.get('/', function(req, res, next) {
   res.sendFile( viewsPath + '/index.html');
 });
 
+router.get('/edit/*', function(req, res, next) {
+  res.sendFile( viewsPath + '/index.html');
+});
+
 module.exports = router;

@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var socket_io = require("socket.io");
 var students = require('./students');
-var Quiz = require('./QuizSession.js')
+var Quiz = require('./QuizSession.js');
 
 var app = express();
 
@@ -27,16 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/presenter/results', function (req, res, next) {
     req.students = students.array;
-    console.log(students.array);
     next();
 });
 
 app.use('/presenter/questions', function (req, res, next) {
     if (quiz) {
-        console.log(quiz.currentQuestion);
-        console.log('cacaaaa');
         if (quiz.currentQuestion) {
-            console.log(quiz.currentQuestion);
             next();
         } else {
             res.redirect('/presenter/results');
@@ -47,12 +43,12 @@ app.use('/presenter/questions', function (req, res, next) {
 });
 
 var routes = require('./routes/index');
-var users = require('./routes/quiz');
+var quizEditor = require('./routes/quiz');
 var student = require('./routes/student');
 var presenter = require('./routes/presenter');
 
 app.use('/', routes);
-app.use('/quiz', users);
+app.use('/quiz', quizEditor);
 app.use('/student', student);
 app.use('/presenter', presenter);
 
@@ -91,35 +87,12 @@ app.use(function (err, req, res, next) {
 var io = socket_io();
 app.io = io;
 
-/*
- //Data model
- var questions = require('./models/data.json');
- var currentQuestionIndex = -1;
- var currentQuestion;
- var correctAnswer;
- 
- var score = 0;
- //var answer = -1;
- 
- 
- var nextQuestion = function () {
- currentQuestionIndex += 1;
- currentQuestion = questions[currentQuestionIndex];
- if (currentQuestion) {
- correctAnswer = currentQuestion.answer - 1;//-1 is because answerAnswer is not 0-based index
- console.log(currentQuestion);
- }
- };
- 
- nextQuestion();
- */
 // socket.io events for answering session
 
 var quiz;
 io.on('connection', function (socket) {
 
     quiz = new Quiz();
-    //quiz.nextQuestion();
     socket.score = 0;
 
     console.log('a user connected...login');
@@ -141,15 +114,11 @@ io.on('connection', function (socket) {
         console.log('a user connected ' + socket.username);
     });
     socket.on('student:score', function (answer) {
-        console.log('correctAnswer: ' + quiz.correctAnswer);
-        console.log('answer: ' + answer);
         socket.answer = answer;
         if (answer === quiz.correctAnswer) {
             socket.score += 1;
             students.addPoints(socket.username, 1);
         }
-        console.log(socket.username + ' answer: ' + answer + ', score: ' + socket.score);
-        //students[socket.username].score = socket.score;
         socket.answer = -1;//clear answer
     });
     socket.on('questions:next', function (msg, setNextQuestion) {
