@@ -1,11 +1,24 @@
+'use strict';
 (function () {
     var app = angular.module('quizEditorApp', ['qaServices', 'ui.sortable']);
 
-    app.controller('quizController', function (Quiz,$routeParams) {
-        quiz = this;
-        quiz.questions = Quiz.get({id:$routeParams.quiz});
+    app.controller('quizController', function (Quiz, $routeParams, $location) {
+        var quiz = this;
+        if($routeParams.quiz !== undefined){
+            //to edit an existing quiz
+            quiz.title = $routeParams.quiz;
+            quiz.questions = Quiz.get({id: $routeParams.quiz});
+        }else{
+            //to create a new quiz
+            quiz.title = '';
+            quiz.questions = [];
+        }
+        
+        
         this.save = function () {
-            Quiz.save({id:$routeParams.quiz}, quiz.questions);
+            Quiz.save({id: quiz.title}, {questions: quiz.questions, oldTitle: $routeParams.quiz});
+            $location.path('/edit/'+quiz.title);
+            //$location = '.' + $location.url() + '/' + quiz.title;
         };
 
         this.addQuestion = function () {

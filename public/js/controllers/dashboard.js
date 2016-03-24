@@ -1,3 +1,4 @@
+'use strict';
 (function () {
     angular.module('dashboardApp', ['ngRoute', 'qaServices', 'quizEditorApp'])
 
@@ -7,9 +8,21 @@
                                 controller: 'dashboardHomeController as home',
                                 templateUrl: '/partials/dashboard/home.html'
                             }).
+                            when('/create', {
+                                controller: 'quizController as quiz',
+                                templateUrl: '/partials/dashboard/quizEditor.html'
+                            }).
                             when('/edit/:quiz', {
                                 controller: 'quizController as quiz',
                                 templateUrl: '/partials/dashboard/quizEditor.html'
+                            }).
+                            when('/run/:quiz', {
+                                controller: 'runningQuizController',
+                                templateUrl: '/partials/dashboard/quizRun.html'
+                            }).
+                            when('/delete/:quiz', {
+                                controller: 'deleteQuizController',
+                                templateUrl: '/partials/dashboard/quizDelete.html'
                             }).
                             otherwise({
                                 redirectTo: '/'
@@ -21,7 +34,6 @@
             .controller('dashboardController', function ($scope) {
                 $scope.qlModal = false;
                 $scope.showQl = function () {
-                    console.log(true);
                     $scope.qlModal = true;
                 };
             })
@@ -29,26 +41,99 @@
             .controller('dashboardHomeController', function () {
             })
 
+            .controller('runningQuizController', function ($routeParams, $scope, QuizSession) {
+                $scope.quiz = $routeParams.quiz;
+
+                var startQuiz = function () {
+                    var response;
+                    QuizSession.run({id: $routeParams.quiz}, function (data) {
+                        response = data.status;
+                        switch (response) {
+                            case "created":
+                                $scope.response = 'The quiz has started!';
+                                $scope.responseStyle = 'alert-success';
+                                break;
+                            case 'running':
+                                $scope.response = 'The quiz is already running!';
+                                $scope.responseStyle = 'alert-warning';
+                                break;
+                            default:
+                                $scope.response = response;
+                                break;
+                        }
+                        $scope.serverLink = './presenter/' + $routeParams.quiz;
+                        $scope.clientLink = location.protocol + '//' + location.host + '/student/' + $routeParams.quiz;
+                        $scope.running = 'running';
+                    });
+                };
+
+                startQuiz();
+
+
+                $scope.startQuiz = function () {
+                    startQuiz();
+                };
+
+
+                $scope.stopQuiz = function () {
+                    QuizSession.stop({id: $scope.quiz}, function (data) {
+                        switch (data.status) {
+                            case 'ok':
+                                $scope.response = "The quiz has been terminated!";
+                                $scope.responseStyle = 'alert-info';
+                                break;
+                            case 'missing':
+                                $scope.response = "The quiz was not running anymore!";
+                                $scope.responseStyle = 'alert-warning';
+                                break;
+                            default:
+                                $scope.response = data.status;
+                                break;
+                        }
+                        $scope.running = '';
+                    });
+                };
+
+            })
+            
+            .controller('deleteQuizController', function ($routeParams, $scope, Quiz) {
+                $scope.quiz = $routeParams.quiz;
+                $scope.deleteQuiz = function(){
+                    Quiz.remove({id: $scope.quiz}, function (data) {
+                        switch (data.status) {
+                            case 'ok':
+                                $scope.response = "The quiz has been deleted";
+                                $scope.responseStyle = 'alert-success';
+                                break;
+                            case 'missing':
+                                $scope.response = "The quiz does not exist.";
+                                $scope.responseStyle = 'alert-info';
+                                break;
+                            default:
+                                $scope.response = data.status;
+                                break;
+                        }
+                    });
+                };
+            })
 
             .directive('qlModal', function (Quiz) {
                 return{
-                    restrict : 'E',
+                    restrict: 'E',
                     transclude: true,
-                    scope:true,
+                    scope: true,
                     link: function (scope, element, attrs) {
                         scope.quizzes = Quiz.query();
-                        console.log(scope.quizzes);
-                        
+
                         scope.closeModal = function () {
                             element.modal('hide');
                         };
 
                         scope.$watch(attrs.visible, function (value) {
-                            if (value === true){
+                            if (value === true) {
                                 scope.quizzes = Quiz.query();
                                 element.modal('show');
-                            }
-                            else
+                            } else
                                 element.modal('hide');
                         });
 

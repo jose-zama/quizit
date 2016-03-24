@@ -1,3 +1,4 @@
+'use strict';
 (function () {
     var app = angular.module('quizClientApp', ['socketApp', 'ngRoute']);
 
@@ -5,14 +6,22 @@
     var _username;
     var _score;
     var _questionsTotal;
+    //var socketObj;
+
+    app.factory('socketObj', function ($routeParams, socket) {
+        return new socket('/' + $routeParams.quizID);
+    });
 
     app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider.
-                    when('/answer', {
-                        controller: 'answersPanelController as panel',
-                        templateUrl: '/partials/student/answer.html'
+                    /*when('/answer', {
+                     controller: 'answersPanelController as panel',
+                     templateUrl: '/partials/student/answer.html'
+                     }).*/
+                    when('/error', {
+                        template:'<p>mmm... something is wrong. Make sure the URL entered was correct.</p>'
                     }).
-                    when('/user', {
+                    when('/:quizID/user', {
                         controller: 'logonCtrl as logon',
                         templateUrl: '/partials/student/logon.html'
                     }).
@@ -20,37 +29,41 @@
                         controller: 'resultCtrl as result',
                         templateUrl: '/partials/student/result.html'
                     }).
+                    when('/:quizID', {
+                        controller: 'answersPanelController as panel',
+                        templateUrl: '/partials/student/answer.html'
+                    }).
                     otherwise({
-                        redirectTo: '/user'
+                        redirectTo: '/error'
                     });
             $locationProvider
                     .html5Mode(true);
         }]);
 
-    app.controller('logonCtrl', function ($scope, $location, socket) {
-        ctrl = this;
+    app.controller('logonCtrl', function ($scope, $location, socketObj, $routeParams) {
+
+        var ctrl = this;
 
         ctrl.setUser = function (username) {
-            socket.emit('user:login', username, function (isTaken) {
-                console.log(isTaken);
+            socketObj.emit('user:login', username, function (isTaken) {
                 if (isTaken) {
                     //stay and show a message
                 } else {
                     _username = username;
-                    $location.path('/answer');
+                    $location.path($routeParams.quizID);
                 }
             });
         };
 
         $scope.$on('$destroy', function (event) {
-            socket.removeAllListeners(); //Avoid creating another listener 
+            socketObj.removeAllListeners(); //Avoid creating another listener 
             //of the other controller
         });
     });
 
-    app.controller('answersPanelController', function ($scope, $location, $timeout, socket) {
+    app.controller('answersPanelController', function ($scope, $location, $timeout, $routeParams, socketObj) {
 
-        panel = this;
+        var panel = this;
 
         panel.changeQuestion = function (question) {
             currentQuestion = question;
@@ -62,14 +75,12 @@
             }
         };
 
-
         //init
         $timeout(function () {
             if (!_username) {
-                $location.path('/user');
+                $location.path($routeParams.quizID + '/user');
             } else {
-                socket.emit('question:pullCurrent', '', function (currentQuestion) {
-                    console.log(currentQuestion.title);
+                socketObj.emit('question:pullCurrent', '', function (currentQuestion) {
                     if (currentQuestion) {
                         panel.changeQuestion(currentQuestion);//pull current question
                     }
@@ -78,14 +89,13 @@
         }, 0);
 
         //event fires when presenter changes the question
-        socket.on('questions:change', function (question) {
+        socketObj.on('questions:change', function (question) {
             if (question) {
                 panel.changeQuestion(question);
             } else {
                 //TODO: check status of questions (about to start or finished) and
                 //route accordingly
-                socket.emit('student:getScore', _username, function (score,questionsTotal) {
-                    console.log('score' + score);
+                socketObj.emit('student:getScore', _username, function (score, questionsTotal) {
                     _score = score;
                     _questionsTotal = questionsTotal;
                     $location.path('/result');
@@ -93,7 +103,7 @@
             }
         });
 
-        socket.on('showAnswer', function (answerAnswer) {
+        socketObj.on('showAnswer', function (answerAnswer) {
             /*var audio = document.createElement('successTone');
              audio.src = getPhoneGapPath()+'/audio/wrong.wav';
              audio.play();*/
@@ -105,7 +115,7 @@
                 }
             }
             panel.options[answerAnswer - 1].style = 'btn-success';
-            socket.emit('student:score', panel.selectedAnswer);
+            socketObj.emit('student:score', panel.selectedAnswer);
         });
 
         panel.selectAnswer = function (answer) {
@@ -117,26 +127,27 @@
         };
 
         panel.submitAnswer = function () {
-            socket.emit('answer', panel.selectedAnswer);
+            socketObj.emit('answer', panel.selectedAnswer);
         };
 
         $scope.$on('$destroy', function (event) {
-            socket.removeAllListeners();
+            socketObj.removeAllListeners();
         });
     });
 
-    app.controller('resultCtrl', function ($scope, $location, socket) {
-        result = this;
+    app.controller('resultCtrl', function ($scope, $location, socketObj) {
+        var result = this;
 
         result.score = _score;
         result.questionsTotal = _questionsTotal;
-        
-        if(!_score){
-            $location.path('/user');
+        result.username = _username;
+
+        if (_score === undefined) {
+            $location.path('/error');
         }
 
         $scope.$on('$destroy', function (event) {
-            socket.removeAllListeners(); //Avoid creating another listener 
+            socketObj.removeAllListeners(); //Avoid creating another listener 
             //of the other controller
         });
     });

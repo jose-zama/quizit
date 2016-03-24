@@ -1,34 +1,35 @@
-var students = (function () {
-    var students = [];
-    var id = {};
+'use strict';
+var students = function () {
+    this.students = [];
+    this.id = {};
 
-    var isRegistered = function (username) {
-        return id[username] !== undefined;
-    };
+    /*return {
+     getScore: getScore,
+     push: push,
+     isRegistered: isRegistered,
+     array: students,
+     addPoints: addPoints
+     };*/
+};
 
-    var push = function (username) {
-        students.push({
-            username: username,
-            score: 0
-        });
-        id[username] = students.length - 1;
-    };
+students.prototype.isRegistered = function (username) {
+    return this.id[username] !== undefined;
+};
 
-    var getScore = function (username) {
-        return students[id[username]].score;
-    };
+students.prototype.push = function (username) {
+    this.students.push({
+        username: username,
+        score: 0
+    });
+    this.id[username] = this.students.length - 1;
+};
 
-    var addPoints = function (username, points) {
-        students[id[username]].score += points;
-    };
-    
-    return {
-        getScore: getScore,
-        push: push,
-        isRegistered: isRegistered,
-        array: students,
-        addPoints: addPoints
-    };
-})();
+students.prototype.getScore = function (username) {
+    return this.students[this.id[username]].score;
+};
+
+students.prototype.addPoints = function (username, points) {
+    this.students[this.id[username]].score += points;
+};
 
 module.exports = students;

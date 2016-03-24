@@ -3,6 +3,10 @@
         <h1>Quiz edition</h1>
     </div>
     <form ng-submit="quiz.save()">
+        <div class="input-group" style="margin-bottom: 20px;">
+            <span class="input-group-addon" id="title">Title</span>
+            <input type="text" ng-model="quiz.title" class="form-control" placeholder="Type a title for your quiz" aria-describedby="title">
+        </div>        
         <div ui-sortable ng-model="quiz.questions" >
             <div class="panel panel-default" ng-repeat="question in quiz.questions">
                 <div class="panel-heading">

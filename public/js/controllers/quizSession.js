@@ -1,65 +1,62 @@
+'use strict';
 (function () {
-    var app = angular.module('quizSessionApp', ['socketApp']);
+    var app = angular.module('quizSessionApp', ['socketApp'], function ($locationProvider) {
+        $locationProvider.html5Mode(true);
+    });
 
-    app.controller('questionController', ['$window', 'socket', function ($window, socket) {
-            questionView = this;
-            questionView.title = '';
-            questionView.options = [];
-            questionView.isAnswerShown = false;
+    app.controller('questionController', ['$window', 'socket', '$scope', '$location', function ($window, socket, $scope, $location) {
+            $scope.title = '';
+            $scope.options = [];
+            $scope.isAnswerShown = false;
 
-            questionView.buttonLabel = 'Show answer';
-            questionView.question = {};
+            $scope.buttonLabel = 'Show answer';
+            $scope.question = {};
 
-            questionView.showQuestion = function (question) {
-                questionView.question = question;
-                questionView.title = question.title;
-                questionView.options = [];
+            var socketObj = new socket($location.url());
+
+            var showQuestion = function (question) {
+                $scope.question = question;
+                $scope.title = question.title;
+                $scope.options = [];
                 for (var i = 0; i < question.options.length; i++) {
-                    questionView.options.push({text: question.options[i], style: ''});
+                    $scope.options.push({text: question.options[i], style: ''});
                 }
-                questionView.isAnswerShown = false;
+                $scope.isAnswerShown = false;
                 //socket.emit('questions:change', question);
             };
-
             //listeners
             //set current question
-            socket.emit('question:pullCurrent', '', function (question) {
+            var resultsPage = '.' + $location.url() + '/results';
+            socketObj.emit('question:pullCurrent', '', function (question) {
                 if (question) {
-                    questionView.showQuestion(question);
+                    showQuestion(question);
                     //socket.emit('user:send','presenter');
                 } else {
-                    $window.location.href = './results';
+                    $window.location.href = resultsPage;
                 }
             });
 
-            /*socket.on('questions:init', function (question) {
-             if (question) {
-             questionView.showQuestion(question);
-             //socket.emit('user:send','presenter');
-             } else {
-             $window.location.href = './results';
-             }
-             });*/
-
-            questionView.showCorrectAnswer = function () {
-                questionView.options[questionView.question.answer - 1].style = 'list-group-item-success';
-                questionView.isAnswerShown = true;
-                socket.emit('presenter:showAnswer', questionView.question.answer);
+            $scope.showCorrectAnswer = function () {
+                $scope.options[$scope.question.answer - 1].style = 'list-group-item-success';
+                $scope.isAnswerShown = true;
+                socketObj.emit('presenter:showAnswer', $scope.question.answer);
             };
 
-            questionView.next = function () {
-                socket.emit('questions:next', null, function (question) {
+            $scope.next = function () {
+                socketObj.emit('questions:next', null, function (question) {
                     if (question) {
-                        questionView.showQuestion(question);
+                        showQuestion(question);
                     } else {
-                        $window.location.href = './results';
+                        $window.location.href = resultsPage;
                     }
 
                 });
             };
-            
-            questionView.exit = function () {
-            };
+
+            $scope.$on('$destroy', function (event) {
+                socketObj.removeAllListeners(); //Avoid creating another listener 
+                //of the other controller
+            });
 
         }]);
 

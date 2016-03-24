@@ -4,13 +4,23 @@ var app = express();
 
 var viewsPath = app.get('views');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  // res.render('index', { title: 'Express' });
+  res.sendFile( viewsPath + '/index.html');
+});
+
+router.get('/create', function(req, res, next) {
   res.sendFile( viewsPath + '/index.html');
 });
 
 router.get('/edit/*', function(req, res, next) {
+  res.sendFile( viewsPath + '/index.html');
+});
+
+router.get('/run/*', function(req, res, next) {
+  res.sendFile( viewsPath + '/index.html');
+});
+
+router.get('/delete/*', function(req, res, next) {
   res.sendFile( viewsPath + '/index.html');
 });
 

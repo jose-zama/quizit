@@ -22,27 +22,26 @@
         <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous"> -->
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/qa.css">
-
+        <base href="/presenter/">
         
     </head>
     <body>
-        <div class="container" ng-controller="questionController as question" >
+        <div class="container" ng-controller="questionController" >
             <div class="page-header">
                 <h1>Q&amp;A <small>A nice way to involve your audience</small> </h1>
             </div>
             <div>
-                <form name="questionForm" ng-submit="question.showCorrectAnswer()">			
+                <form name="questionForm" ng-submit="showCorrectAnswer()">			
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3>{{question.title}}</h3>
+                            <h3>{{title}}</h3>
                         </div>
                         <div class="panel-body">
                             <ul class="list-group">
-                                <li class="list-group-item {{answer.style}}" ng-repeat="answer in question.options" >{{answer.text}}</li>                                
+                                <li class="list-group-item {{answer.style}}" ng-repeat="answer in options" >{{answer.text}}</li>                                
                             </ul>				
-                            <button ng-hide="question.isAnswerShown" class="btn btn-primary pull-right" type="submit">Show answer</button>
-                            <button ng-click="question.exit()" class="btn btn-link" type="button">Exit</button>
-                            <button ng-show="question.isAnswerShown" ng-click="question.next()" class="btn btn-primary pull-right" type="button">Next</button>
+                            <button ng-hide="isAnswerShown" class="btn btn-primary pull-right" type="submit">Show answer</button>
+                            <button ng-show="isAnswerShown" ng-click="next()" class="btn btn-primary pull-right" type="button">Next</button>
                         </div>	
                     </div>		
                 </form>	
