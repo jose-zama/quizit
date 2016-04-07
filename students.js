@@ -1,35 +1,37 @@
 'use strict';
 var students = function () {
-    this.students = [];
-    this.id = {};
-
-    /*return {
-     getScore: getScore,
-     push: push,
-     isRegistered: isRegistered,
-     array: students,
-     addPoints: addPoints
-     };*/
+    this.students = {};
 };
 
-students.prototype.isRegistered = function (username) {
-    return this.id[username] !== undefined;
+students.prototype.isTaken = function (username) {
+    return this.students[username] !== undefined;
 };
 
 students.prototype.push = function (username) {
-    this.students.push({
-        username: username,
+    this.students[username] = {
         score: 0
-    });
-    this.id[username] = this.students.length - 1;
+    };
 };
 
 students.prototype.getScore = function (username) {
-    return this.students[this.id[username]].score;
+    return this.students[username].score;
 };
 
 students.prototype.addPoints = function (username, points) {
-    this.students[this.id[username]].score += points;
+    this.students[username].score += points;
+};
+
+students.prototype.toArray = function () {
+    var array = [];
+    for (var item in this.students) {
+        if (this.students.hasOwnProperty(item)) {
+            array.push({
+                username: item,
+                score: this.students[item].score
+            });
+        }
+    }
+    return array;
 };
 
 module.exports = students;

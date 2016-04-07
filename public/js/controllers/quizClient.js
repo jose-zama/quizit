@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-    var app = angular.module('quizClientApp', ['socketApp', 'ngRoute']);
+    var app = angular.module('quizClientApp', ['socketApp', 'ngRoute', 'ngCookies']);
 
     var currentQuestion;
     var _username;
@@ -19,7 +19,7 @@
                      templateUrl: '/partials/student/answer.html'
                      }).*/
                     when('/error', {
-                        template:'<p>mmm... something is wrong. Make sure the URL entered was correct.</p>'
+                        template: '<p>mmm... something is wrong. Make sure the URL entered was correct.</p>'
                     }).
                     when('/:quizID/user', {
                         controller: 'logonCtrl as logon',
@@ -40,16 +40,19 @@
                     .html5Mode(true);
         }]);
 
-    app.controller('logonCtrl', function ($scope, $location, socketObj, $routeParams) {
+    app.controller('logonCtrl', function ($scope, $location, socketObj, $routeParams, $cookies) {
 
-        var ctrl = this;
 
-        ctrl.setUser = function (username) {
+        $scope.setUser = function (username) {
             socketObj.emit('user:login', username, function (isTaken) {
+                console.log(isTaken);
                 if (isTaken) {
-                    //stay and show a message
+                    $scope.alert = username + ' is already taken, enter another one';
                 } else {
                     _username = username;
+                    var path = window.location.pathname;
+                    path = path.slice(0, path.lastIndexOf('/'));
+                    $cookies.put('username', username, {path: path});
                     $location.path($routeParams.quizID);
                 }
             });
@@ -61,7 +64,7 @@
         });
     });
 
-    app.controller('answersPanelController', function ($scope, $location, $timeout, $routeParams, socketObj) {
+    app.controller('answersPanelController', function ($scope, $location, $timeout, $routeParams, socketObj, $cookies) {
 
         var panel = this;
 
@@ -75,16 +78,32 @@
             }
         };
 
-        //init
+        //init, when page loads
         $timeout(function () {
-            if (!_username) {
+            var username = $cookies.get('username');
+            console.log(username);
+            if (username === undefined) {
                 $location.path($routeParams.quizID + '/user');
             } else {
-                socketObj.emit('question:pullCurrent', '', function (currentQuestion) {
-                    if (currentQuestion) {
-                        panel.changeQuestion(currentQuestion);//pull current question
+                socketObj.emit('user:isRegistered', username, function (isRegistered) {
+                    //if is not registered then discard cookie and route to 
+                    //login. This case happens when a cookie from a previous quiz
+                    //was not deleted for some reason
+
+                    if (!isRegistered) {
+                        var path = window.location.pathname;
+                        $cookies.remove('username', {path: path});
+                        $location.path($routeParams.quizID + '/user');
+                    } else {
+                        _username = username;
+                        socketObj.emit('question:pullCurrent', '', function (currentQuestion) {
+                            if (currentQuestion) {
+                                panel.changeQuestion(currentQuestion);//pull current question
+                            }
+                        });
                     }
                 });
+
             }
         }, 0);
 
@@ -98,6 +117,8 @@
                 socketObj.emit('student:getScore', _username, function (score, questionsTotal) {
                     _score = score;
                     _questionsTotal = questionsTotal;
+                    var path = window.location.pathname;
+                    $cookies.remove('username', {path: path});
                     $location.path('/result');
                 });
             }
@@ -117,7 +138,13 @@
             panel.options[answerAnswer - 1].style = 'btn-success';
             socketObj.emit('student:score', panel.selectedAnswer);
         });
-
+        /*
+         socketObj.on('disconnect', function () {
+         var path = window.location.pathname;
+         console.log(path);
+         $cookies.remove('username', {path: path});
+         });
+         */
         panel.selectAnswer = function (answer) {
             panel.selectedAnswer = answer;
         };

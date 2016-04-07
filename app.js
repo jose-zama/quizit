@@ -41,7 +41,7 @@ var presenter = require('./routes/presenter');
 
 app.use('/', routes);
 app.use('/quiz', quizEditor);
-app.use('/student', student);
+app.use('/answer', student);
 app.use('/presenter', presenter);
 
 // catch 404 and forward to error handler

@@ -5,8 +5,6 @@ var app = express();
 var Quiz = require('../QuizSession.js');
 
 var viewsPath = app.get('views') + '/session';
-var quizSession;
-
 
 /* RUN quiz */
 router.post('/:quizId', function (req, res, next) {
@@ -23,8 +21,6 @@ router.post('/:quizId', function (req, res, next) {
         });
     } else {
         //already running
-        var io = req.app.get('io');
-        var ns = io.of('/' + req.params.quizId);
         res.json({
             status: 'running',
             url: ''
@@ -75,7 +71,7 @@ router.get('/:quizId/results', function (req, res, next) {
     
     //If the quiz is already running
     if (QuizesRunning[req.params.quizId] !== undefined) {
-        var results = QuizesRunning[req.params.quizId].students.students;
+        var results = QuizesRunning[req.params.quizId].students.toArray();
         res.render(viewsPath + '/results', {results: results});
     } else {
         //if the quiz has not started,in other words does not exist

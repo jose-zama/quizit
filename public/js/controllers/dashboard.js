@@ -62,7 +62,7 @@
                                 break;
                         }
                         $scope.serverLink = './presenter/' + $routeParams.quiz;
-                        $scope.clientLink = location.protocol + '//' + location.host + '/student/' + $routeParams.quiz;
+                        $scope.clientLink = location.protocol + '//' + location.host + '/answer/' + $routeParams.quiz;
                         $scope.running = 'running';
                     });
                 };

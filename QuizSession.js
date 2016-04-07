@@ -9,7 +9,7 @@ var Session = function (file, io) {
     var correctAnswer = this.correctAnswer;
     var students = this.students = new stud();
 
-    var nextQuestion  = function () {
+    var nextQuestion = function () {
         currentQuestionIndex += 1;
         currentQuestion = questions[currentQuestionIndex];
         if (currentQuestion) {
@@ -26,20 +26,30 @@ var Session = function (file, io) {
         console.log('a user connected...login');
         //socket.emit('questions:init', currentQuestion);
 
-        socket.on('question:pullCurrent', function (blank, sendCurrentQuestion) {
-            sendCurrentQuestion(currentQuestion);
+        socket.on('question:pullCurrent', function (blank, callback) {
+            callback(currentQuestion);
         });
 
-        socket.on('user:login', function (username, isTaken) {
-            if (!socket.username) {
-                socket.username = username;
-                if (!students.isRegistered(username)) {
-                    console.log('no registered');
-                    students.push(socket.username);
-                }
+        socket.on('user:login', function (username, callback) {
+            socket.username = username;
+            if (!students.isTaken(username)) {
+                console.log('no taken');
+                students.push(socket.username);
+                callback(false);
+            } else {
+                callback(true);
             }
-            isTaken(false);
             console.log('a user connected ' + socket.username);
+        });
+        socket.on('user:isRegistered', function (username, callback) {
+            socket.username = username;
+            //if the cookie of username persisted somehow to 
+            //the restart of a quiz
+            if (!students.isTaken(username)) {
+                callback(false);
+            } else {
+                callback(true);
+            }
         });
         socket.on('student:score', function (answer) {
             socket.answer = answer;
