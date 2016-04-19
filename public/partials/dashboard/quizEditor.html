@@ -2,17 +2,17 @@
     <div class="page-header">
         <h1>Quiz edition</h1>
     </div>
-    <form ng-submit="quiz.save()">
+    <form ng-submit="save()">
         <div class="input-group" style="margin-bottom: 20px;">
             <span class="input-group-addon" id="title">Title</span>
-            <input type="text" ng-model="quiz.title" class="form-control" placeholder="Type a title for your quiz" aria-describedby="title">
+            <input type="text" ng-model="title" class="form-control" placeholder="Type a title for your quiz" aria-describedby="title">
         </div>        
-        <div ui-sortable ng-model="quiz.questions" >
-            <div class="panel panel-default" ng-repeat="question in quiz.questions">
+        <div ui-sortable ng-model="questions" >
+            <div class="panel panel-default" ng-repeat="question in questions">
                 <div class="panel-heading">
                     <div >
                         <span class="glyphicon glyphicon-menu-hamburger close pull-left" aria-hidden="true" style=" cursor: move;" title="Move question" ></span>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" title="Remove question" ng-click="quiz.removeQuestion($index)">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" title="Remove question" ng-click="removeQuestion($index)">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -29,7 +29,7 @@
             </div>
         </div>
         <p>
-            <button type="button" ng-click="quiz.addQuestion()" class="btn btn-success center-block">Add question</button>
+            <button type="button" ng-click="addQuestion()" class="btn btn-success center-block">Add question</button>
         </p>
         <p>
             <button type="submit" class="btn btn-primary center-block">Save</button>

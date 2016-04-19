@@ -9,11 +9,11 @@
                                 templateUrl: '/partials/dashboard/home.html'
                             }).
                             when('/create', {
-                                controller: 'quizController as quiz',
+                                controller: 'quizController',
                                 templateUrl: '/partials/dashboard/quizEditor.html'
                             }).
                             when('/edit/:quiz', {
-                                controller: 'quizController as quiz',
+                                controller: 'quizController',
                                 templateUrl: '/partials/dashboard/quizEditor.html'
                             }).
                             when('/run/:quiz', {
@@ -59,7 +59,8 @@
                                 break;
                             default:
                                 $scope.response = response;
-                                break;
+                                $scope.responseStyle = 'alert-danger';
+                                return;
                         }
                         $scope.serverLink = './presenter/' + $routeParams.quiz;
                         $scope.clientLink = location.protocol + '//' + location.host + '/answer/' + $routeParams.quiz;
@@ -88,6 +89,7 @@
                                 break;
                             default:
                                 $scope.response = data.status;
+                                $scope.responseStyle = 'alert-danger';
                                 break;
                         }
                         $scope.running = '';
@@ -95,10 +97,10 @@
                 };
 
             })
-            
+
             .controller('deleteQuizController', function ($routeParams, $scope, Quiz) {
                 $scope.quiz = $routeParams.quiz;
-                $scope.deleteQuiz = function(){
+                $scope.deleteQuiz = function () {
                     Quiz.remove({id: $scope.quiz}, function (data) {
                         switch (data.status) {
                             case 'ok':
@@ -111,13 +113,14 @@
                                 break;
                             default:
                                 $scope.response = data.status;
+                                $scope.responseStyle = 'alert-danger';
                                 break;
                         }
                     });
                 };
             })
 
-            .directive('qlModal', function (Quiz) {
+            .directive('qlModal', function (Quiz,$timeout) {
                 return{
                     restrict: 'E',
                     transclude: true,
@@ -138,13 +141,16 @@
                         });
 
                         element.on('hidden.bs.modal', function () {
-                            scope.$apply(function () {
-                                scope.$parent[attrs.visible] = false;
-                            });
+                            $timeout(function () {
+                                scope.$apply(function () {
+                                    scope.$parent[attrs.visible] = false;
+                                });
+                            }, 0, false);
+
                         });
 
                         scope.$on('$destroy', function () {
-                            element.$destroy();
+                            //element.remove(); i dont know if it is necessary
                         });
                     },
                     templateUrl: '/partials/modals/quizList.html'

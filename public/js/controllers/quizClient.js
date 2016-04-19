@@ -2,11 +2,7 @@
 (function () {
     var app = angular.module('quizClientApp', ['socketApp', 'ngRoute', 'ngCookies']);
 
-    var currentQuestion;
-    var _username;
-    var _score;
-    var _questionsTotal;
-    //var socketObj;
+    app.value('userDetails', {username: undefined, score: undefined, totalQuestions: undefined});
 
     app.factory('socketObj', function ($routeParams, socket) {
         return new socket('/' + $routeParams.quizID);
@@ -40,7 +36,7 @@
                     .html5Mode(true);
         }]);
 
-    app.controller('logonCtrl', function ($scope, $location, socketObj, $routeParams, $cookies) {
+    app.controller('logonCtrl', function ($scope, $location, socketObj, $routeParams, $cookies, userDetails) {
 
 
         $scope.setUser = function (username) {
@@ -49,7 +45,7 @@
                 if (isTaken) {
                     $scope.alert = username + ' is already taken, enter another one';
                 } else {
-                    _username = username;
+                    userDetails.username = username;
                     var path = window.location.pathname;
                     path = path.slice(0, path.lastIndexOf('/'));
                     $cookies.put('username', username, {path: path});
@@ -64,17 +60,14 @@
         });
     });
 
-    app.controller('answersPanelController', function ($scope, $location, $timeout, $routeParams, socketObj, $cookies) {
+    app.controller('answersPanelController', function ($scope, $location, $timeout, $routeParams, socketObj, $cookies, userDetails) {
 
-        var panel = this;
-
-        panel.changeQuestion = function (question) {
-            currentQuestion = question;
-            panel.selectedAnswer = null;
-            panel.question = question.title;
-            panel.options = [];
+        $scope.changeQuestion = function (question) {
+            $scope.selectedAnswer = null;
+            $scope.question = question.title;
+            $scope.options = [];
             for (var i = 0; i < question.options.length; i++) {
-                panel.options.push({text: question.options[i], style: 'btn-primary'});
+                $scope.options.push({text: question.options[i], style: 'btn-primary'});
             }
         };
 
@@ -95,10 +88,10 @@
                         $cookies.remove('username', {path: path});
                         $location.path($routeParams.quizID + '/user');
                     } else {
-                        _username = username;
+                        userDetails.username = username;
                         socketObj.emit('question:pullCurrent', '', function (currentQuestion) {
                             if (currentQuestion) {
-                                panel.changeQuestion(currentQuestion);//pull current question
+                                $scope.changeQuestion(currentQuestion);//pull current question
                             }
                         });
                     }
@@ -110,13 +103,13 @@
         //event fires when presenter changes the question
         socketObj.on('questions:change', function (question) {
             if (question) {
-                panel.changeQuestion(question);
+                $scope.changeQuestion(question);
             } else {
                 //TODO: check status of questions (about to start or finished) and
                 //route accordingly
-                socketObj.emit('student:getScore', _username, function (score, questionsTotal) {
-                    _score = score;
-                    _questionsTotal = questionsTotal;
+                socketObj.emit('student:getScore', userDetails.username, function (score, totalQuestions) {
+                    userDetails.score = score;
+                    userDetails.totalQuestions = totalQuestions;
                     var path = window.location.pathname;
                     $cookies.remove('username', {path: path});
                     $location.path('/result');
@@ -124,37 +117,24 @@
             }
         });
 
-        socketObj.on('showAnswer', function (answerAnswer) {
+        socketObj.on('showAnswer', function (answer) {
             /*var audio = document.createElement('successTone');
              audio.src = getPhoneGapPath()+'/audio/wrong.wav';
              audio.play();*/
-            if (panel.selectedAnswer || panel.selectedAnswer === 0) {
-                if (panel.selectedAnswer === answerAnswer - 1) {//-1 is because answerAnswer is not 0-based index
-                } else {
-
-                    panel.options[panel.selectedAnswer].style = 'btn-danger';
-                }
+            if (($scope.selectedAnswer || $scope.selectedAnswer === 0)
+                    && $scope.selectedAnswer !== answer - 1) {//-1 is because answerAnswer is not 0-based index
+                $scope.options[$scope.selectedAnswer].style = 'btn-danger';
             }
-            panel.options[answerAnswer - 1].style = 'btn-success';
-            socketObj.emit('student:score', panel.selectedAnswer);
+            $scope.options[answer - 1].style = 'btn-success';
+            socketObj.emit('student:score', $scope.selectedAnswer);
         });
-        /*
-         socketObj.on('disconnect', function () {
-         var path = window.location.pathname;
-         console.log(path);
-         $cookies.remove('username', {path: path});
-         });
-         */
-        panel.selectAnswer = function (answer) {
-            panel.selectedAnswer = answer;
+
+        $scope.selectAnswer = function (answer) {
+            $scope.selectedAnswer = answer;
         };
 
-        panel.isActive = function (answer) {
-            return answer === panel.selectedAnswer;
-        };
-
-        panel.submitAnswer = function () {
-            socketObj.emit('answer', panel.selectedAnswer);
+        $scope.isActive = function (answer) {
+            return answer === $scope.selectedAnswer;
         };
 
         $scope.$on('$destroy', function (event) {
@@ -162,14 +142,13 @@
         });
     });
 
-    app.controller('resultCtrl', function ($scope, $location, socketObj) {
-        var result = this;
+    app.controller('resultCtrl', function ($scope, $location, socketObj, userDetails) {
 
-        result.score = _score;
-        result.questionsTotal = _questionsTotal;
-        result.username = _username;
+        $scope.score = userDetails.score;
+        $scope.totalQuestions = userDetails.totalQuestions;
+        $scope.username = userDetails.username;
 
-        if (_score === undefined) {
+        if ($scope.score === undefined) {
             $location.path('/error');
         }
 
