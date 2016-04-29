@@ -3,6 +3,8 @@ var express = require('express');
 var router = express.Router();
 var app = express();
 var Quiz = require('../QuizSession.js');
+var jwt = require('jsonwebtoken');
+var quizzes = require('../model/quizzes');
 
 var viewsPath = app.get('views') + '/session';
 
@@ -13,17 +15,27 @@ router.post('/:quizId', function (req, res, next) {
     if (QuizesRunning[req.params.quizId] === undefined) {
         var io = req.app.get('io');
         var nsp = io.of('/' + req.params.quizId);
-        
-        QuizesRunning[req.params.quizId] = new Quiz('./models/' + req.params.quizId + '.json', nsp);
-        res.json({
-            status: 'created',
-            url: ''
+
+        var userProfile = jwt.decode(req.cookies.auth);
+        quizzes.get(req.params.quizId, userProfile.id, function (err, quiz) {
+            if (err) {
+                err.status = err.status || 500;
+                return next(err);
+            }
+            QuizesRunning[req.params.quizId] = new Quiz(quiz, nsp);
+            res.json({
+                status: 'created',
+                title: quiz.title
+            });
         });
+
+
     } else {
         //already running
+        var title = QuizesRunning[req.params.quizId].title;
         res.json({
             status: 'running',
-            url: ''
+            title: title
         });
     }
 });
@@ -68,7 +80,7 @@ router.delete('/:quizId', function (req, res, next) {
 /* GET results. */
 router.get('/:quizId/results', function (req, res, next) {
     var QuizesRunning = req.app.get('quizesRunning');
-    
+
     //If the quiz is already running
     if (QuizesRunning[req.params.quizId] !== undefined) {
         var results = QuizesRunning[req.params.quizId].students.toArray();

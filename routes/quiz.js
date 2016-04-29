@@ -3,67 +3,58 @@ var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var app = express();
+var quizzes = require('../model/quizzes');
+var jwt = require('jsonwebtoken');
 
-var viewsPath = app.get('views');
 
 // RESTful app for CRUD operations of questions
 //https://scotch.io/tutorials/creating-a-single-page-todo-app-with-node-and-angular
 
 
 router.get('/', function (req, res, next) {
-    fs.readdir('./models/', function (err, files) {
-        if (err)
-            throw err;
-        else {
-            files = files.map(function (name) {
-                return name.slice(0, name.lastIndexOf('.'));
-            });
-            res.json(files);
+    var userProfile = jwt.decode(req.cookies.auth);
+    quizzes.getUserQuizzes(userProfile.id, function (err, quizzes) {
+        if (err) {
+            err.status = err.status || 500;
+            return next(err);
         }
+        res.json(quizzes);
     });
 });
 
 router.get('/:id', function (req, res, next) {
-    fs.readFile('./models/' + req.params.id + '.json', function (err, data) {
-        if (err)
-            throw err;
-        else {
-            var questions = JSON.parse(data);
-            res.json(questions);
+    var userProfile = jwt.decode(req.cookies.auth);
+    quizzes.get(req.params.id, userProfile.id, function (err, quiz) {
+        if (err) {
+            err.status = err.status || 500;
+            return next(err);
         }
+        res.json(quiz);
     });
 });
 
-router.post('/:id', function (req, res, next) {
+
+router.post('/:title', function (req, res, next) {
     var questions = req.body.questions;
-    var filename = req.params.id;
-    var old = req.body.oldTitle;
-    fs.writeFile('./models/' + filename + '.json', JSON.stringify(questions, null, 4), function (err) {
-        if (err)
-            throw err;
-        else {
-            //if name was changed, delete old file
-            if (old !== undefined && filename !== old) {
-                //fs.renameSync('./models/'+req.params.id+'.json','./models/'+req.body.title+'.json');
-                fs.unlink('./models/' + old + '.json', function (err) {
-                    if (err)
-                        throw err;
-                });
-            }
-            res.send('ok');
+    var title = req.params.title;
+    var quizId = req.body.quizId;
+    var userProfile = jwt.decode(req.cookies.auth);
+    quizzes.save(userProfile.id, quizId, title, questions, function (err, id) {
+        if (err) {
+            err.status = 500;
+            return next(err);
         }
+        res.json({status: "ok", id: id});
     });
 });
 
 router.delete('/:id', function (req, res, next) {
-    var filename = req.params.id;
-    fs.unlink('./models/' + filename + '.json', function (err) {
-        if (err){
-            if (err.code === 'ENOENT') {
-                res.json({status: "missing"});
-            } else {
-                throw err;
-            }
+    var userProfile = jwt.decode(req.cookies.auth);
+    var quiz = req.params.id;
+    quizzes.delete(quiz, userProfile.id, function (err, quizzes) {
+        if (err) {
+            err.status = err.status || 500;
+            return next(err);
         }
         res.json({status: "ok"});
     });

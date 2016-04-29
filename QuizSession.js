@@ -1,9 +1,9 @@
 'use strict';
-var fs = require('fs');
 var stud = require('./students');
 
-var Session = function (file, io) {
-    var questions = this.questions = JSON.parse(fs.readFileSync(file));
+var Session = function (quiz, io) {
+    this.title = quiz.title;
+    var questions = this.questions = quiz.questions;
     var currentQuestionIndex = this.currentQuestionIndex = -1;
     var currentQuestion = this.currentQuestion;
     var correctAnswer = this.correctAnswer;

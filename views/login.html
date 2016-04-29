@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html ng-app="userLoginApp">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Q&amp;A</title>
+
+        <!-- Bootstrap CSS-->
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/qa.css">
+
+        <!--Angular dependencies -->
+        <script type="text/javascript" src="/js/lib/angular/angular.min.js"></script>
+        <script type="text/javascript" src="/js/lib/angular/angular-cookies.min.js"></script>
+
+        <!--Angular controllers -->
+        <script type="text/javascript" src="/js/controllers/login.js"></script>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="container" ng-controller="loginController" >
+            <div class="page-header">
+                <h1>Q&amp;A <small>A nice way to involve your audience</small> </h1>
+            </div>
+            <div>
+                <form name="loginForm" >			
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3>Hey, sign in first!</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="username">Email address</label>
+                                <input ng-model="username" type="email" class="form-control" id="username" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input ng-model="password" type="password" class="form-control" id="password" placeholder="Password">
+                            </div>				
+                            <button class="btn btn-primary pull-left" type="submit" ng-click="register()">Register</button>
+                            <button class="btn btn-primary pull-right" type="submit" ng-click="signIn()">Sign in</button>
+                        </div>	
+                    </div>		
+                </form>	
+                <div class="alert alert-warning" ng-show="message" role="alert">{{message}}</div>
+            </div>
+        </div>
+    </body>
+</html>

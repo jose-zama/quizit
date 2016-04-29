@@ -1,7 +1,7 @@
 <div class="alert " ng-class="responseStyle" role="alert">{{response}}</div>
 
-<div>
-    <H1>Are you sure to delete the <b>{{quiz}}</b> quiz?</H1>
+<div ng-hide="error">
+    <H1>Are you sure to delete the <b>{{title}}</b> quiz?</H1>
 
     <p>
         If you are, clicking the below button will delete the full quiz without being 

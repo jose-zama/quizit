@@ -24,10 +24,19 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+app.connectDb(function (err, db) {
+    if (err) {
+        console.log('Unable to connect to database.');
+        process.exit(1);
+    } else {
+        console.log("Connected correctly to server");
+        server.listen(port);
+        app.set('db', db);
+        server.on('error', onError);
+        server.on('listening', onListening);
+    }
+});
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.

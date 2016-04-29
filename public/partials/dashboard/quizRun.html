@@ -1,29 +1,30 @@
 <div class="alert " ng-class="responseStyle" role="alert">{{response}}</div>
 
-<div ng-show="running">
-    <H1>Running quiz <b>{{quiz}}</b> </H1>
+<div ng-hide="error">
+    <div ng-show="running">
+        <H1>Running quiz <b>{{title}}</b> </H1>
 
-    <p>Open the following URL to control the quiz:<p>
-        <a ng-href="{{serverLink}}" target="_blank">server</a>
+        <p>Open the following URL to control the quiz:<p>
+            <a ng-href="{{serverLink}}" target="_blank">server</a>
 
-    <p>Share the following URL to any person who wants to answer: <p>
-        <a ng-href="{{clientLink}}" target="_blank">{{clientLink}}</a>
+        <p>Share the following URL to any person who wants to answer: <p>
+            <a ng-href="{{clientLink}}" target="_blank">{{clientLink}}</a>
 
-    <p>To finish the quiz click the <i>Stop quiz</i> button. 
-        This will end the session, so it can be restarted again.<p>
+        <p>To finish the quiz click the <i>Stop quiz</i> button. 
+            This will end the session, so it can be restarted again.<p>
 
-    <div>
-        <button class="btn btn-danger" ng-click="stopQuiz()">Stop quiz</button>
+        <div>
+            <button class="btn btn-danger" ng-click="stopQuiz()">Stop quiz</button>
+        </div>
+    </div>
+
+    <div ng-hide="running">
+        <H1>Quiz <b>{{title}}</b> ended</H1>
+
+        <p>To restart the quiz click the <i>Restart quiz</i> button.<p>
+
+        <div>
+            <button class="btn btn-success" ng-click="startQuiz()">Restart quiz</button>
+        </div>
     </div>
 </div>
-
-<div ng-hide="running">
-    <H1>Quiz <b>{{quiz}}</b> ended</H1>
-
-    <p>To restart the quiz click the <i>Restart quiz</i> button.<p>
-
-    <div>
-        <button class="btn btn-success" ng-click="startQuiz()">Restart quiz</button>
-    </div>
-</div>
-

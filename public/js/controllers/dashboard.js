@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-    angular.module('dashboardApp', ['ngRoute', 'qaServices', 'quizEditorApp'])
+    angular.module('dashboardApp', ['ngRoute', 'qaServices', 'quizEditorApp', 'ngCookies'])
 
             .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
                     $routeProvider.
@@ -31,10 +31,16 @@
                             .html5Mode(true);
                 }])
 
-            .controller('dashboardController', function ($scope) {
+            .controller('dashboardController', function ($scope, $cookies) {
+                $scope.username = $cookies.get('username');
                 $scope.qlModal = false;
                 $scope.showQl = function () {
                     $scope.qlModal = true;
+                };
+                $scope.logout = function () {
+                    $cookies.remove('auth');
+                    $cookies.remove('username');
+                    location.href = '/';
                 };
             })
 
@@ -48,6 +54,7 @@
                     var response;
                     QuizSession.run({id: $routeParams.quiz}, function (data) {
                         response = data.status;
+                        $scope.title = data.title;
                         switch (response) {
                             case "created":
                                 $scope.response = 'The quiz has started!';
@@ -65,7 +72,22 @@
                         $scope.serverLink = './presenter/' + $routeParams.quiz;
                         $scope.clientLink = location.protocol + '//' + location.host + '/answer/' + $routeParams.quiz;
                         $scope.running = 'running';
-                    });
+                    },
+                            function error(httpResponse) {
+                                $scope.error = true;
+                                if (httpResponse.status === 400) {
+                                    $scope.response = "Mmm, it seems the URL is wrong, check it again";
+                                    $scope.responseStyle = 'alert-warning';
+                                }
+                                if (httpResponse.status === 403) {
+                                    $scope.response = "Hey, you don't have access to the requested quiz!";
+                                    $scope.responseStyle = 'alert-danger';
+                                }
+                                if (httpResponse.status === 404) {
+                                    $scope.response = "Hey, the requested quiz doesn't exist!";
+                                    $scope.responseStyle = 'alert-danger';
+                                }
+                            });
                 };
 
                 startQuiz();
@@ -100,6 +122,30 @@
 
             .controller('deleteQuizController', function ($routeParams, $scope, Quiz) {
                 $scope.quiz = $routeParams.quiz;
+
+                Quiz.get({id: $routeParams.quiz},
+                        function success(response) {
+                            if (response.title) {
+                                $scope.title = response.title;
+                            }
+                        },
+                        function error(httpResponse) {
+                            $scope.error = true;
+                            if (httpResponse.status === 400) {
+                                $scope.response = "Mmm, it seems the URL is wrong, check it again";
+                                $scope.responseStyle = 'alert-warning';
+                            }
+                            if (httpResponse.status === 403) {
+                                $scope.response = "Hey, you don't have access to the requested quiz!";
+                                $scope.responseStyle = 'alert-danger';
+                            }
+                            if (httpResponse.status === 404) {
+                                $scope.response = "Hey, the requested quiz doesn't exist!";
+                                $scope.responseStyle = 'alert-danger';
+                            }
+                        }
+                );
+
                 $scope.deleteQuiz = function () {
                     Quiz.remove({id: $scope.quiz}, function (data) {
                         switch (data.status) {
@@ -120,7 +166,7 @@
                 };
             })
 
-            .directive('qlModal', function (Quiz,$timeout) {
+            .directive('qlModal', function (Quiz, $timeout) {
                 return{
                     restrict: 'E',
                     transclude: true,
@@ -134,8 +180,15 @@
 
                         scope.$watch(attrs.visible, function (value) {
                             if (value === true) {
-                                scope.quizzes = Quiz.query();
-                                element.modal('show');
+                                Quiz.query(function success(res) {
+                                    if (res.error) {
+                                        location.href = '/';
+                                    } else {
+                                        scope.quizzes = res.quizzes;
+                                        element.modal('show');
+                                    }
+                                }
+                                );
                             } else
                                 element.modal('hide');
                         });

@@ -3,8 +3,14 @@ var questionServices = angular.module('qaServices', ['ngResource']);
 questionServices.factory('Quiz', ['$resource',
     function ($resource) {
         return $resource('quiz/:id', {id: '@id'}, {
-            get: {method: 'GET', isArray: true},
-            run: {method: 'POST'}
+            run: {method: 'POST'},
+            query: {method: 'GET', transformResponse: function (data, headersGetter) {
+                    var res = angular.fromJson(data);
+                    if (res.error === 'unauthorized') {
+                        return {error:'unauthorized'};
+                    }
+                    return {quizzes: res};
+                }}
         });
     }]);
 

@@ -6,7 +6,7 @@
             </div>
             <div class="modal-body">
                 <div class="list-group">
-                    <a class="list-group-item" ng-repeat="quiz in quizzes" ng-bind="quiz" ng-href="{{qlMethod}}/{{quiz}}/" ng-click="closeModal()" ></a>
+                    <a class="list-group-item" ng-repeat="quiz in quizzes" ng-bind="quiz.title" ng-href="{{qlMethod}}/{{quiz.id}}/" ng-click="closeModal()" ></a>
                 </div>
             </div>
             <div class="modal-footer">
