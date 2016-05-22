@@ -1,7 +1,8 @@
 'use strict';
 var stud = require('./students');
 
-var Session = function (quiz, io) {
+var Session = function (sessionName, quiz, io) {
+    this.sessionName = sessionName;
     this.title = quiz.title;
     var questions = this.questions = quiz.questions;
     var currentQuestionIndex = this.currentQuestionIndex = -1;

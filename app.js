@@ -22,6 +22,7 @@ var app = express();
 app.set('view engine', 'ejs');
 
 //Control of quizes running
+app.set('quizMap', {});
 app.set('quizesRunning', {});
 
 // Socket.io

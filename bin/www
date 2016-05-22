@@ -27,6 +27,7 @@ var server = http.createServer(app);
 app.connectDb(function (err, db) {
     if (err) {
         console.log('Unable to connect to database.');
+        console.log(err);
         process.exit(1);
     } else {
         console.log("Connected correctly to server");

@@ -10,10 +10,6 @@
 
     app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider.
-                    /*when('/answer', {
-                     controller: 'answersPanelController as panel',
-                     templateUrl: '/partials/student/answer.html'
-                     }).*/
                     when('/error', {
                         template: '<p>mmm... something is wrong. Make sure the URL entered was correct.</p>'
                     }).

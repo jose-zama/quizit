@@ -54,7 +54,6 @@
                     var response;
                     QuizSession.run({id: $routeParams.quiz}, function (data) {
                         response = data.status;
-                        $scope.title = data.title;
                         switch (response) {
                             case "created":
                                 $scope.response = 'The quiz has started!';
@@ -69,8 +68,10 @@
                                 $scope.responseStyle = 'alert-danger';
                                 return;
                         }
-                        $scope.serverLink = './presenter/' + $routeParams.quiz;
-                        $scope.clientLink = location.protocol + '//' + location.host + '/answer/' + $routeParams.quiz;
+                        $scope.title = data.title;
+                        $scope.sessionName = data.sessionName;
+                        $scope.serverLink = './presenter/' + $scope.sessionName;
+                        $scope.clientLink = location.protocol + '//' + location.host + '/answer/' + $scope.sessionName;
                         $scope.running = 'running';
                     },
                             function error(httpResponse) {
@@ -99,7 +100,7 @@
 
 
                 $scope.stopQuiz = function () {
-                    QuizSession.stop({id: $scope.quiz}, function (data) {
+                    QuizSession.stop({id: $scope.sessionName}, function (data) {
                         switch (data.status) {
                             case 'ok':
                                 $scope.response = "The quiz has been terminated!";

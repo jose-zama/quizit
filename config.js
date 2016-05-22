@@ -1,6 +1,6 @@
 module.exports = {
     //jsonwebtoken secret key
-    'secret': 'auth',
+    'secret': 'dev',
     //db URL
-    'dbUrl': 'mongodb://localhost:27017/quizit'
+    'dbUrl': 'mongodb://127.0.0.1:27017/quizit'
 };
