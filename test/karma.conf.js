@@ -22,13 +22,13 @@ module.exports = function (config) {
         files: [
             //libraries dependencies ORDER MATTERS
             'node_modules/socket.io/node_modules/socket.io-client/socket.io.js',
-            'public/js/lib/jquery/*.js',
-            'public/js/lib/bootstrap.min.js',
-            'public/js/lib/angular/angular.min.js',
-            'public/js/lib/angular/angular-route.min.js',
-            'public/js/lib/angular/angular-resource.min.js',
-            'public/js/lib/angular/angular-cookies.min.js',
-            'public/js/lib/angular/angular-mocks.js',
+            'bower_components/jquery/dist/*.js',
+            'bower_components/bootstrap/dist/js/bootstrap.min.js',
+            'bower_components/angular/angular.min.js',
+            'bower_components/angular-route/angular-route.min.js',
+            'bower_components/angular-resource/angular-resource.min.js',
+            'bower_components/angular-cookies/angular-cookies.min.js',
+            'bower_components/angular-mocks/angular-mocks.js',
             'public/js/lib/*.js',
             
             //code subject to testing

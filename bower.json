@@ -1,0 +1,31 @@
+{
+  "name": "qa",
+  "description": "Questions and answers",
+  "main": "",
+  "authors": [
+    "zamawarner <pepeazb@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.5",
+    "angular-route": "^1.5.5",
+    "angular-resource": "^1.5.5",
+    "angular-cookies": "^1.5.5",
+    "bootstrap": "^3.3.6",
+    "jquery": "^2.2.4",
+    "jquery-ui": "jqueryui#^1.11.4",
+    "jquery-ui-touch-punch-improved": "jqueryui-touch-punch-improved#^0.3.1"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.5.5"
+  }
+}
