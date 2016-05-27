@@ -2,7 +2,7 @@
     <div class="panel-heading">
         <h3>{{question}}</h3>
     </div>
-    <form name="answerForm" ng-submit="submitAnswer()">
+    <form class="answerForm" name="answerForm" ng-submit="submitAnswer()">
         <div class="panel-body">
             <fieldset>
                 <button type="button" ng-class="{active:isActive($index)}" ng-click="selectAnswer($index)" ng-repeat="option in options" class="btn {{option.style}} btn-lg btn-block " >{{option.text}}</button>                            
