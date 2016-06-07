@@ -55,9 +55,9 @@ var Session = function (sessionName, quiz, io) {
         socket.on('student:score', function (answer) {
             socket.answer = answer;
             if (answer === correctAnswer) {
-                //socket.score += 1;
                 students.addPoints(socket.username, 1);
             }
+            io.emit('questions:studentAnswer',answer);
             socket.answer = -1;//clear answer
         });
         socket.on('questions:next', function (msg, setNextQuestion) {

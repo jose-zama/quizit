@@ -13,13 +13,16 @@
             $scope.question = {};
 
             var socketObj = new socket($location.url());
+            var answersPrefixes = ['A. ', 'B. ', 'C. ', 'D. '];
 
             var showQuestion = function (question) {
                 $scope.question = question;
                 $scope.title = question.title;
                 $scope.options = [];
+                $scope.chart= [];
                 for (var i = 0; i < question.options.length; i++) {
-                    $scope.options.push({text: question.options[i], style: ''});
+                    $scope.options.push({text: answersPrefixes[i] + question.options[i], style: ''});
+                    $scope.chart[i]=0;
                 }
                 $scope.isAnswerShown = false;
                 //socket.emit('questions:change', question);
@@ -40,6 +43,7 @@
                 $scope.options[$scope.question.answer - 1].style = 'list-group-item-success';
                 $scope.isAnswerShown = true;
                 socketObj.emit('presenter:showAnswer', $scope.question.answer);
+                $scope.showAnswersChart = true;
             };
 
             $scope.next = function () {
@@ -52,6 +56,10 @@
 
                 });
             };
+
+            socketObj.on('questions:studentAnswer', function (answer) {
+                $scope.chart[answer]++;
+            });
 
             $scope.$on('$destroy', function (event) {
                 socketObj.removeAllListeners(); //Avoid creating another listener 

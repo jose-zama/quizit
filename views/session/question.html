@@ -38,12 +38,12 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-group">
-                                <li class="list-group-item {{answer.style}}" ng-repeat="answer in options" >{{answer.text}}</li>                                
+                                <li class="list-group-item {{answer.style}}" ng-repeat="answer in options" >{{answer.text}}<span class="badge" ng-show="showAnswersChart">{{chart[$index]}}</span></li>                                
                             </ul>				
                             <button ng-hide="isAnswerShown" class="btn btn-primary pull-right" type="submit">Show answer</button>
                             <button ng-show="isAnswerShown" ng-click="next()" class="btn btn-primary pull-right" type="button">Next</button>
                         </div>	
-                    </div>		
+                    </div>	
                 </form>	
             </div>
         </div>
