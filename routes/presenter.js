@@ -122,25 +122,13 @@ router.get('/:quizName/results', function (req, res, next) {
     //If the quiz is already running
     if (quizId !== undefined) {
         var QuizesRunning = req.app.get('quizesRunning');
-        var results = QuizesRunning[quizId].students.toArray();
+        var results = QuizesRunning[quizId].students.toArray().sort(function(a,b){return b.score-a.score});
         res.render(viewsPath + '/results', {results: results});
     } else {
         //if the quiz has not started,in other words does not exist
         res.render(viewsPath + '/missing', {quiz: req.params.quizName});
     }
 
-    /*
-     var QuizesRunning = req.app.get('quizesRunning');
-     
-     //If the quiz is already running
-     if (QuizesRunning[req.params.quizId] !== undefined) {
-     var results = QuizesRunning[req.params.quizId].students.toArray();
-     res.render(viewsPath + '/results', {results: results});
-     } else {
-     //if the quiz has not started,in other words does not exist
-     res.render(viewsPath + '/missing', {quiz: req.params.quizId});
-     }
-     */
 });
 
 module.exports = router;
