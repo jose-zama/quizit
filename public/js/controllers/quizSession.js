@@ -1,10 +1,10 @@
 'use strict';
 (function () {
-    var app = angular.module('quizSessionApp', ['socketApp'], function ($locationProvider) {
+    var app = angular.module('quizSessionApp', ['socketApp', 'timer', 'ngAudio'], function ($locationProvider) {
         $locationProvider.html5Mode(true);
     });
 
-    app.controller('questionController', ['$window', 'socket', '$scope', '$location', function ($window, socket, $scope, $location) {
+    app.controller('questionController', ['$window', 'socket', '$scope', '$location', '$timeout', 'ngAudio', function ($window, socket, $scope, $location, $timeout, ngAudio) {
             $scope.title = '';
             $scope.options = [];
             $scope.isAnswerShown = false;
@@ -14,17 +14,22 @@
 
             var socketObj = new socket($location.url());
             var answersPrefixes = ['A. ', 'B. ', 'C. ', 'D. '];
+            $scope.initialCountdown = 20;
+
+            //sound
+            $scope.countdownSound = ngAudio.load("/audio/10_sec_to_gong.mp3");
 
             var showQuestion = function (question) {
                 $scope.question = question;
                 $scope.title = question.title;
                 $scope.options = [];
-                $scope.chart= [];
+                $scope.chart = [];
                 for (var i = 0; i < question.options.length; i++) {
                     $scope.options.push({text: answersPrefixes[i] + question.options[i], style: ''});
-                    $scope.chart[i]=0;
+                    $scope.chart[i] = 0;
                 }
                 $scope.isAnswerShown = false;
+                resetCountdown();
                 //socket.emit('questions:change', question);
             };
             //listeners
@@ -38,6 +43,12 @@
                     $window.location.href = resultsPage;
                 }
             });
+
+            function resetCountdown() {
+                $scope.$broadcast('timer-reset');
+                $scope.$broadcast('timer-start');
+            }
+            ;
 
             $scope.showCorrectAnswer = function () {
                 $scope.options[$scope.question.answer - 1].style = 'list-group-item-success';
@@ -56,6 +67,31 @@
 
                 });
             };
+
+            $scope.addCDSeconds = function (secs) {
+                $scope.$broadcast('timer-add-cd-seconds', secs);
+                $scope.countdownSound.restart();
+            };
+
+            $scope.$on('timer-tick', function (event, args) {
+                var initialCountDownOn = 10 * 1000;
+                $scope.dangerZone = args.millis <= initialCountDownOn;
+
+                $timeout(function () {
+                    if (args.millis === initialCountDownOn+1000) {
+                        $scope.countdownSound.play();
+                    }
+                    $scope.$apply();
+                });
+            });
+
+
+            $scope.countdownFinished = function () {
+                $scope.showCorrectAnswer();
+                $scope.$apply();
+            };
+
+
 
             socketObj.on('questions:studentAnswer', function (answer) {
                 $scope.chart[answer]++;

@@ -10,6 +10,13 @@
         <!--Angular dependencies -->
         <script src="/bower_components/angular/angular.min.js"></script>
         
+        <!--Timer dependencies -->
+        <script src="/bower_components/angular-timer/dist/angular-timer.min.js"></script>
+        <script src="/bower_components/moment/min/moment.min.js"></script>
+        <script src="/bower_components/moment/min/locales.min.js"></script>
+        <script src="/bower_components/humanize-duration/humanize-duration.js"></script>
+        <script src="/bower_components/angular-audio/app/angular.audio.js"></script>
+        
         <!--Angular controller -->
         <script type="text/javascript" src="/js/controllers/quizSession.js"></script>
         
@@ -39,7 +46,9 @@
                         <div class="panel-body">
                             <ul class="list-group">
                                 <li class="list-group-item {{answer.style}}" ng-repeat="answer in options" >{{answer.text}}<span class="badge" ng-show="showAnswersChart">{{chart[$index]}}</span></li>                                
-                            </ul>				
+                            </ul>	
+                            <button ng-hide="isAnswerShown" ng-click="addCDSeconds(5)" class="btn btn-default"  type="button"><timer interval="1000"  ng-attr-countdown="initialCountdown" finish-callback="countdownFinished()" ng-class="{'countdown':dangerZone}" >{{countdown}}</timer></button>
+                            
                             <button ng-hide="isAnswerShown" class="btn btn-primary pull-right" type="submit">Show answer</button>
                             <button ng-show="isAnswerShown" ng-click="next()" class="btn btn-primary pull-right" type="button">Next</button>
                         </div>	
