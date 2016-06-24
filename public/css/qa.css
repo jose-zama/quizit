@@ -7,3 +7,7 @@
 body{
     padding-bottom: 30px;
 }
+
+.answerForm .btn{
+    white-space: normal;
+}
