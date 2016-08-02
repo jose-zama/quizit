@@ -26,8 +26,9 @@ Make sure the mongodb database is running and then run:
 
 Optionally with DEBUG enabled:
 
-`set DEBUG=qa:* & npm start`
+Linux: `export DEBUG=qa:* & npm start`
 
+Windows: `set DEBUG=qa:* & npm start`
 
 
 ### config.js
