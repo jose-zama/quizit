@@ -14,7 +14,7 @@
 
             var socketObj = new socket($location.url());
             var answersPrefixes = ['A. ', 'B. ', 'C. ', 'D. '];
-            $scope.initialCountdown = 20;
+            $scope.initialCountdown = 32;
 
             //sound
             $scope.countdownSound = ngAudio.load("/audio/10_sec_to_gong.mp3");
