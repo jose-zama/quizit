@@ -15,12 +15,14 @@
             var socketObj = new socket($location.url());
             var answersPrefixes = ['A. ', 'B. ', 'C. ', 'D. '];
             $scope.initialCountdown = 32;
+            $scope.progress = 0;
 
             //sound
             $scope.countdownSound = ngAudio.load("/audio/10_sec_to_gong.mp3");
 
             var showQuestion = function (question) {
                 $scope.question = question;
+                $scope.progress = (question.number/question.totalQuestions)*100;
                 $scope.title = question.title;
                 $scope.options = [];
                 $scope.chart = [];
