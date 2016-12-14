@@ -40,14 +40,14 @@
                         <div class="panel-body">
                             <div class="form-group">
                                 <label for="username">Email address</label>
-                                <input ng-model="username" type="email" class="form-control" id="username" placeholder="Email">
+                                <input ng-model="username" type="email" class="form-control" id="username" placeholder="Email" required>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input ng-model="password" type="password" class="form-control" id="password" placeholder="Password">
+                                <input ng-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
                             </div>				
-                            <button class="btn btn-primary pull-left" type="submit" ng-click="register()">Register</button>
-                            <button class="btn btn-primary pull-right" type="submit" ng-click="signIn()">Sign in</button>
+                            <button ng-disabled="loginForm.$invalid" class="btn btn-primary pull-left" type="submit" ng-click="register()">Register</button>
+                            <button ng-disabled="loginForm.$invalid" class="btn btn-primary pull-right" type="submit" ng-click="signIn()">Sign in</button>
                         </div>	
                     </div>		
                 </form>	
