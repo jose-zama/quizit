@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3>{{question}}</h3>
+        <h3><span ng-show="!edit" ng-click="edit=true"  markdown-to-html="question"></span></h3>
     </div>
     <form class="answerForm" name="answerForm" ng-submit="submitAnswer()">
         <div class="panel-body">

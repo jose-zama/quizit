@@ -1,7 +1,11 @@
 'use strict';
 (function () {
-    var app = angular.module('quizSessionApp', ['socketApp', 'timer', 'ngAudio'], function ($locationProvider) {
+    var app = angular.module('quizSessionApp', ['socketApp', 'timer', 'ngAudio', 'ng-showdown'], function ($locationProvider) {
         $locationProvider.html5Mode(true);
+    });
+
+    app.config(function ($showdownProvider) {
+        $showdownProvider.setOption('tables', true);
     });
 
     app.controller('questionController', ['$window', 'socket', '$scope', '$location', '$timeout', 'ngAudio', function ($window, socket, $scope, $location, $timeout, ngAudio) {
@@ -22,7 +26,7 @@
 
             var showQuestion = function (question) {
                 $scope.question = question;
-                $scope.progress = (question.number/question.totalQuestions)*100;
+                $scope.progress = (question.number / question.totalQuestions) * 100;
                 $scope.title = question.title;
                 $scope.options = [];
                 $scope.chart = [];
@@ -80,7 +84,7 @@
                 $scope.dangerZone = args.millis <= initialCountDownOn;
 
                 $timeout(function () {
-                    if (args.millis === initialCountDownOn+1000) {
+                    if (args.millis === initialCountDownOn + 1000) {
                         $scope.countdownSound.play();
                     }
                     $scope.$apply();
