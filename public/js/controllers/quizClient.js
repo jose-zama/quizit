@@ -1,6 +1,10 @@
 'use strict';
 (function () {
-    var app = angular.module('quizClientApp', ['socketApp', 'ngRoute', 'ngCookies']);
+    var app = angular.module('quizClientApp', ['socketApp', 'ngRoute', 'ngCookies', 'ng-showdown']);
+
+    app.config(function ($showdownProvider) {
+        $showdownProvider.setOption('tables', true);
+    });
 
     app.value('userDetails', {username: undefined, score: undefined, totalQuestions: undefined});
 

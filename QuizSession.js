@@ -14,6 +14,8 @@ var Session = function (sessionName, quiz, io) {
         currentQuestionIndex += 1;
         currentQuestion = questions[currentQuestionIndex];
         if (currentQuestion) {
+            currentQuestion.number = currentQuestionIndex + 1 ;
+            currentQuestion.totalQuestions = questions.length ;
             correctAnswer = currentQuestion.answer - 1;//-1 is because answerAnswer is not 0-based index
         }
     };
