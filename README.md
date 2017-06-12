@@ -1,5 +1,7 @@
 # quizit
 
+[![Build Status](https://travis-ci.org/jose-zama/quizit.svg?branch=master)](https://travis-ci.org/jose-zama/quizit)
+
 ## Important note regarding to **License**
 
 This project is on development phase and a **license** regarding to the code and use of the application has not been chosen. 
