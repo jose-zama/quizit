@@ -1,3 +1,3 @@
 #!/bin/bash
 
-forever start --workingDir /home/ec2-user/quizit -c "npm start" ./
+~/node-v4.4.7-linux-x64/bin/forever start --workingDir /home/ec2-user/quizit -c "npm start" ./
