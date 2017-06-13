@@ -1,4 +1,10 @@
 language: node_js
+
+before_deploy:
+  - zip -r latest *
+  - mkdir -p cd_upload
+  - mv latest.zip cd_upload/latest.zip
+
 deploy:
   provider: s3
   access_key_id:
@@ -7,4 +13,7 @@ deploy:
     secure: TLhAcg01kcbqcARTUSWPieue5h8gn3HZ5cNT1avrcDgfTGIt+cMDL/zzTP0ci/ZLdoBrXv5UCiVIm8mcyR1+vqVq3yBwqpaLlqu1x+hRqmWGQvhlN6S6lyheYwFyBh6i4KtReVuxN9ylOSQSttVppKl5ousNcoNevt5srZ4kY0QRJpgrUUfD0B2RCqoH6E8MnsX5WX6pPg5p0vtOrQSFQnlZcJ7SVL7fvKrsNNNnu1fwsRnhS11InnQAAxKGCCIpISg+vVLMOo8NNhryEt+TCFowltW30s6ogo1EM3fAX7KRpjy0JU7rbuPBACbughmuOhWrx3BB9PKxNKqUjMx5waPVDBl1MdWGJhnYVrvyRoI2DtLhtKx2PQEQJkHcaf+o98khyi+Vl9yg9xhlwXAPUyoIqcD0mCUJRIS+I1vuGduNfSp52EcxgEwqCHOMgqcf+jnbgsXpg95YZU4c1iYFyGfU1fvXJc94wHVYYp/zIVcciKjOI51Msg6hDuNuW2CDAtSz4cILdFJ09POIqDQXdk29uEpUgijrMZn0XvvZ3eyUq1/exx9ElbDyq0gpKdYd4I0VpjfFZ93+o1p0sOKzZcW5EwusNN+dpLjZ3CkORm1ptRIfwBKA9SnjcD8OcLUKyh+qrqZEsbP0dz7IZdCPnWSFO7/ACdKtF2M9GQLNGP0=
   bucket: quizit-resources
   skip_cleanup: true
+  local_dir: cd_upload
   upload-dir: codedeploy
+  on:
+    repo: jose-zama/quizit
