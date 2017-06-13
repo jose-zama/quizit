@@ -6,14 +6,23 @@ before_deploy:
   - mv latest.zip cd_upload/latest.zip
 
 deploy:
-  provider: s3
-  access_key_id:
-    secure: CVkV0GyaycFq66EdCI/AzwZkj1FIibyNEXuKRhyM5IQLgpkripd/84FDzSc0+5TqQcdq6Ab7k5axEg0Iv7+9QhlfOch9phSBry3/sOHay9uZxilQ50/d5NdNDO68vKjVCl31QtWdqLicok08UiEgXEl7SZOP59LwqvsChBkN0U1HwpdCsB1IoJ0RbzM3NZqKXkvd/6SVKMaFzkKbBQ4CPUBAtUr4IdOD9INITLE51w2DNBAqiBE1EoAdVaUqruZikSVKydrBUHav9t4xc16wKBvAOrvU3GeMBn1Teo0xgoA8v5S0+vwjgVvMWLycH0plGiIElRlJrsT6vgIFf+P1IaGSzOQkkUBO35tEmeBPd9TtfO+p/FAahdWWpJ8kd144beGzitBfDY8O/PG+UW+eH9xsKzjwRWAI3bsSzLRxZZKa2fyfTOJxIh4hjmKxVy9WmWPBrC/ECyTVt9+2YrduOAelZy2Myl8qHMQPx4NCWrrRfugYj6ZNcXty299vdTCO20/RbvKV9Ovx/0x4uWYgPBQQGStnXbEcOYiKbXCF8tSfIPDcLIGUY+BcHL8v0JlC7g4AdNDd8Ljk1Gpcbc4eRfwP+jj4lVdiyRgb5JDfPCC94AyAj/sRLb9phjsjTCoXQ6YRbgOLw+6g60HxXkeSLWSIgKV7ettcutteJe9bvHw=
-  secret_access_key:
-    secure: TLhAcg01kcbqcARTUSWPieue5h8gn3HZ5cNT1avrcDgfTGIt+cMDL/zzTP0ci/ZLdoBrXv5UCiVIm8mcyR1+vqVq3yBwqpaLlqu1x+hRqmWGQvhlN6S6lyheYwFyBh6i4KtReVuxN9ylOSQSttVppKl5ousNcoNevt5srZ4kY0QRJpgrUUfD0B2RCqoH6E8MnsX5WX6pPg5p0vtOrQSFQnlZcJ7SVL7fvKrsNNNnu1fwsRnhS11InnQAAxKGCCIpISg+vVLMOo8NNhryEt+TCFowltW30s6ogo1EM3fAX7KRpjy0JU7rbuPBACbughmuOhWrx3BB9PKxNKqUjMx5waPVDBl1MdWGJhnYVrvyRoI2DtLhtKx2PQEQJkHcaf+o98khyi+Vl9yg9xhlwXAPUyoIqcD0mCUJRIS+I1vuGduNfSp52EcxgEwqCHOMgqcf+jnbgsXpg95YZU4c1iYFyGfU1fvXJc94wHVYYp/zIVcciKjOI51Msg6hDuNuW2CDAtSz4cILdFJ09POIqDQXdk29uEpUgijrMZn0XvvZ3eyUq1/exx9ElbDyq0gpKdYd4I0VpjfFZ93+o1p0sOKzZcW5EwusNN+dpLjZ3CkORm1ptRIfwBKA9SnjcD8OcLUKyh+qrqZEsbP0dz7IZdCPnWSFO7/ACdKtF2M9GQLNGP0=
-  bucket: quizit-resources
-  skip_cleanup: true
-  local_dir: cd_upload
-  upload-dir: codedeploy
-  on:
-    repo: jose-zama/quizit
+  - provider: s3
+    access_key_id: &1
+      secure: CVkV0GyaycFq66EdCI/AzwZkj1FIibyNEXuKRhyM5IQLgpkripd/84FDzSc0+5TqQcdq6Ab7k5axEg0Iv7+9QhlfOch9phSBry3/sOHay9uZxilQ50/d5NdNDO68vKjVCl31QtWdqLicok08UiEgXEl7SZOP59LwqvsChBkN0U1HwpdCsB1IoJ0RbzM3NZqKXkvd/6SVKMaFzkKbBQ4CPUBAtUr4IdOD9INITLE51w2DNBAqiBE1EoAdVaUqruZikSVKydrBUHav9t4xc16wKBvAOrvU3GeMBn1Teo0xgoA8v5S0+vwjgVvMWLycH0plGiIElRlJrsT6vgIFf+P1IaGSzOQkkUBO35tEmeBPd9TtfO+p/FAahdWWpJ8kd144beGzitBfDY8O/PG+UW+eH9xsKzjwRWAI3bsSzLRxZZKa2fyfTOJxIh4hjmKxVy9WmWPBrC/ECyTVt9+2YrduOAelZy2Myl8qHMQPx4NCWrrRfugYj6ZNcXty299vdTCO20/RbvKV9Ovx/0x4uWYgPBQQGStnXbEcOYiKbXCF8tSfIPDcLIGUY+BcHL8v0JlC7g4AdNDd8Ljk1Gpcbc4eRfwP+jj4lVdiyRgb5JDfPCC94AyAj/sRLb9phjsjTCoXQ6YRbgOLw+6g60HxXkeSLWSIgKV7ettcutteJe9bvHw=
+    secret_access_key:&2
+      secure: TLhAcg01kcbqcARTUSWPieue5h8gn3HZ5cNT1avrcDgfTGIt+cMDL/zzTP0ci/ZLdoBrXv5UCiVIm8mcyR1+vqVq3yBwqpaLlqu1x+hRqmWGQvhlN6S6lyheYwFyBh6i4KtReVuxN9ylOSQSttVppKl5ousNcoNevt5srZ4kY0QRJpgrUUfD0B2RCqoH6E8MnsX5WX6pPg5p0vtOrQSFQnlZcJ7SVL7fvKrsNNNnu1fwsRnhS11InnQAAxKGCCIpISg+vVLMOo8NNhryEt+TCFowltW30s6ogo1EM3fAX7KRpjy0JU7rbuPBACbughmuOhWrx3BB9PKxNKqUjMx5waPVDBl1MdWGJhnYVrvyRoI2DtLhtKx2PQEQJkHcaf+o98khyi+Vl9yg9xhlwXAPUyoIqcD0mCUJRIS+I1vuGduNfSp52EcxgEwqCHOMgqcf+jnbgsXpg95YZU4c1iYFyGfU1fvXJc94wHVYYp/zIVcciKjOI51Msg6hDuNuW2CDAtSz4cILdFJ09POIqDQXdk29uEpUgijrMZn0XvvZ3eyUq1/exx9ElbDyq0gpKdYd4I0VpjfFZ93+o1p0sOKzZcW5EwusNN+dpLjZ3CkORm1ptRIfwBKA9SnjcD8OcLUKyh+qrqZEsbP0dz7IZdCPnWSFO7/ACdKtF2M9GQLNGP0=
+    bucket: quizit-resources
+    skip_cleanup: true
+    local_dir: cd_upload
+    upload-dir: codedeploy
+    on: &3
+      repo: jose-zama/quizit
+  - provider: codedeploy
+    access_key_id: *1
+    secret_access_key: *2
+    bucket: quizit-resources
+    key: latest.zip
+    bundle_type: zip
+    application: quizit
+    deployment_group: quizit
+    on: *3
