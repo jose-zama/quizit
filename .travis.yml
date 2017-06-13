@@ -21,7 +21,7 @@ deploy:
     access_key_id: *1
     secret_access_key: *2
     bucket: quizit-resources
-    key: latest.zip
+    key: codedeploy/latest.zip
     bundle_type: zip
     application: quizit
     deployment_group: quizit

@@ -24,7 +24,7 @@ os: linux
 #   may cause associated deployments to fail.
 files:
   - source: /
-    destination: /home/ec2-user/quizit
+    destination: /home/ec2-user/quizit/
 # For deployments to Amazon Linux, Ubuntu Server, or RHEL instances,
 #   you can specify a "permissions" 
 #   section here that describes special permissions to apply to the files 
@@ -79,6 +79,7 @@ hooks:
 #   revision's file bundle.
   ApplicationStop:
     - location: codedeploy/stop.sh
+      runas: ec2-user
 # During the BeforeInstall deployment lifecycle event, run the commands 
 #   in the script specified in "location".
   # BeforeInstall:
@@ -101,6 +102,7 @@ hooks:
 #   in the script specified in "location".
   ApplicationStart:
     - location: codedeploy/start.sh
+      runas: ec2-user
 # During the ValidateService deployment lifecycle event, run the commands 
 #   in the script specified in "location".
   # ValidateService:
@@ -109,4 +111,4 @@ hooks:
       # runas:
     # - location: 
       # timeout:
-      # runas:
+      # runas:        
