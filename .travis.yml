@@ -26,3 +26,4 @@ deploy:
     application: quizit
     deployment_group: quizit
     on: *3
+    wait-until-deployed: true
