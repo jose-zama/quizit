@@ -1,7 +1,7 @@
 language: node_js
 
 before_deploy:
-  - zip -r latest *
+  - zip -r latest * -x bower_components/\* -x node_modules/\* -x coverage/\*
   - mkdir -p cd_upload
   - mv latest.zip cd_upload/latest.zip
 
